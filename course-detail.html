@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details | Aurelius University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .header-scrolled {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-scrolled a, .header-scrolled button, .header-scrolled span {
+            color: #1a202c !important;
+        }
+        .header-scrolled .apply-btn {
+             background-color: #c09a59;
+             color: white !important;
+        }
+        .lecture-item.active {
+            background-color: #e3f2fd;
+            border-left-color: #c09a59;
+        }
+        .lecture-item.active h4 {
+            color: #c09a59;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-screen-2xl mx-auto bg-white">
+        <!-- Header -->
+         <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 transition-all duration-300">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center space-x-2 text-white">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-10">
+                        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+                        <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+                        <a href="/courses" class="nav-link-underline active text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+                        <a href="/notes" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+                        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+                        <a href="/blog" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+                        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+                        <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+                        <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+                        
+                    </nav>
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+                         <button class="md:hidden text-white" id="menu-button">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+             <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+                <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+                <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+                <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+                <a href="/notes" class="block text-white text-center py-4 hover:bg-gray-800">Notes</a>
+                <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+                <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+                <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+                <a href="/login" class="block text-white text-center py-4 hover:bg-gray-800">Login</a>
+                <a href="/register" class="block text-white text-center py-4 hover:bg-gray-800">Register</a>
+                <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+            </div>
+        </header>
+
+
+        <main class="pt-20">
+            <section class="bg-gray-800 text-white py-12">
+                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 id="course-title-header" class="text-4xl font-bold">Loading Course...</h1>
+                    <p id="course-instructor" class="mt-2 text-lg text-gray-300"></p>
+                </div>
+            </section>
+
+            <section class="py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2">
+                        <!-- Video Player -->
+                        <div class="bg-black rounded-lg overflow-hidden shadow-lg aspect-video">
+                            <video id="lecture-video" controls class="w-full h-full" poster="https://placehold.co/1920x1080/000000/FFFFFF?text=Select+a+Lecture">
+                                <!-- Source will be set by JS -->
+                            </video>
+                        </div>
+
+                        <!-- Lecture Details -->
+                        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+                            <h2 id="lecture-title" class="text-3xl font-bold">Select a lecture to begin</h2>
+                            <p id="lecture-description" class="mt-4 text-gray-600">The video and description for the selected lecture will appear here.</p>
+                        </div>
+                        
+                         <!-- Supporting Videos -->
+                        <div class="mt-8 bg-white p-6 rounded-lg shadow" id="supporting-videos-wrapper" style="display:none;">
+                          <h3 class="text-xl font-bold mb-3">Supporting Videos</h3>
+                          <ul id="supporting-videos" class="space-y-2 text-sm"></ul>
+                        </div>
+
+                        <!-- Resources -->
+                        <div id="lecture-resources-container" class="mt-8 bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-2xl font-bold">Resources</h3>
+                            <div id="lecture-resources" class="mt-4">
+                                <p class="text-gray-500">Resources for the selected lecture will be listed here.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lecture Playlist -->
+                    <aside class="lg:col-span-1">
+                        <div class="bg-white p-6 rounded-lg shadow sticky top-28">
+                            <h3 class="text-2xl font-bold mb-4">Course Content</h3>
+                            <div id="playlist-container" class="space-y-2 max-h-[70vh] overflow-y-auto">
+                                <!-- Playlist items will be injected here -->
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+        </main>
+        
+    </div>
+<script src="/js/main.js"></script>
+    <script>
+        feather.replace();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id');
+
+            const videoPlayer = document.getElementById('lecture-video');
+            const lectureTitle = document.getElementById('lecture-title');
+            const lectureDescription = document.getElementById('lecture-description');
+            const lectureResources = document.getElementById('lecture-resources');
+            const playlistContainer = document.getElementById('playlist-container');
+
+            // use server API
+            fetch('/api/courses/public')
+                .then(r => {
+                  if (!r.ok) throw new Error('courses_fetch_failed');
+                  return r.json();
+                })
+                .then(courses => {
+                    const course = (courses||[]).find(c => String(c.id) === String(courseId));
+                     if (!course) {
+                         document.querySelector('main').innerHTML = '<p class="text-center py-20">Course not found.</p>';
+                         return;
+                     }
+
+                     // Populate header
+                    document.getElementById('course-title-header').textContent = course.title || 'Course';
+                    document.title = `${course.title || 'Course'} | Aurelius University`;
+                    document.getElementById('course-instructor').textContent = `Instructor: ${course.instructor||''}`;
+
+                    // Populate playlist (safe fallback if lectures missing)
+                    (course.lectures || []).forEach((lecture, index) => {
+                        const lectureElement = document.createElement('div');
+                        lectureElement.className = 'lecture-item p-4 border-l-4 border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors';
+                        lectureElement.dataset.lectureIndex = index;
+                        lectureElement.innerHTML = `
+                            <h4 class="font-bold text-lg">${index + 1}. ${lecture.title}</h4>
+                            <span class="text-sm text-gray-500">${lecture.duration}</span>
+                        `;
+                        playlistContainer.appendChild(lectureElement);
+                    });
+                    
+                    // Add click event to playlist items
+                    const lectureItems = document.querySelectorAll('.lecture-item');
+                    lectureItems.forEach(item => {
+                        item.addEventListener('click', () => {
+                            const lectureIndex = parseInt(item.dataset.lectureIndex);
+                            updatePlayer(course.lectures[lectureIndex], item);
+                        });
+                    });
+
+                    // Auto-play first lecture
+                    if (course.lectures && course.lectures.length > 0) {
+                        updatePlayer(course.lectures[0], lectureItems[0]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching course details:', error);
+                    document.querySelector('main').innerHTML = '<p class="text-center py-20">Course not found or error loading course.</p>';
+                });
+
+            function updatePlayer(lecture, activeElement) {
+              const main = lecture.mainVideo || (lecture.videos && lecture.videos[0]) || null;
+              const supporting = lecture.supportingVideos || (lecture.videos ? lecture.videos.slice(1) : []);
+              if(main){
+                videoPlayer.src = main.url;
+                videoPlayer.poster = "";
+              } else {
+                videoPlayer.removeAttribute('src');
+                videoPlayer.poster = 'https://placehold.co/1920x1080/000/FFF?text=No+Video';
+              }
+              lectureTitle.textContent = lecture.title;
+              lectureDescription.innerHTML = lecture.description || '';
+              // Supporting videos
+              const supWrap = document.getElementById('supporting-videos-wrapper');
+              const supList = document.getElementById('supporting-videos');
+              supList.innerHTML='';
+              if(supporting && supporting.length){
+                supWrap.style.display='block';
+                supporting.forEach(v=>{
+                  const li=document.createElement('li');
+                  li.innerHTML = `<button class="text-left w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded flex justify-between">
+                    <span>${v.name||'Video'}</span><span class="text-xs text-gray-500">Play</span>
+                  </button>`;
+                  li.querySelector('button').addEventListener('click', ()=>{
+                    videoPlayer.src = v.url;
+                    videoPlayer.play();
+                  });
+                  supList.appendChild(li);
+                });
+              } else supWrap.style.display='none';
+              // Resources (without supporting duplication)
+              lectureResources.innerHTML='';
+              const resources = lecture.resources || [];
+              if(resources.length){
+                const ul=document.createElement('ul'); ul.className='list-disc list-inside space-y-2';
+                resources.forEach(r=>{
+                  ul.innerHTML += `<li><a href="${r.url}" target="_blank" class="text-blue-600 hover:underline">${(r.name||'Resource')} ${r.type? '('+r.type+')':''}</a></li>`;
+                });
+                lectureResources.appendChild(ul);
+              } else {
+                lectureResources.innerHTML='<p class="text-gray-500">No resources for this lecture.</p>';
+              }
+              document.querySelectorAll('.lecture-item').forEach(el => el.classList.remove('active'));
+              activeElement.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

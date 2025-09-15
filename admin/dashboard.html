@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard | Aurelius</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+    .sidebar-link { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.95rem; font-weight:500; color:#d1d5db; transition:all .15s; }
+    .sidebar-link:hover { background:#111827; color:#fff; }
+    /* Mobile sidebar overlay for admin pages (shared) */
+    #admin-mobile-menu { display: none; position: fixed; inset: 0; z-index: 70; }
+    #admin-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+    #admin-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:360px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+    @media (max-width: 768px) { #admin-mobile-menu.show { display:block; } }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/admin/dashboard" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/admin/students" class="sidebar-link"><i data-feather="users" class="w-4"></i><span>Students</span></a>
+      <a href="/admin/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/admin/notes" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/admin/blogs" class="sidebar-link"><i data-feather="edit" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4">
+      <button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md transition flex items-center justify-center space-x-2"><i data-feather="log-out" class="w-4"></i><span>Logout</span></button>
+    </form>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
+      <div class="flex items-center gap-3">
+        <button id="admin-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900">View site</a>
+        <form method="post" action="/logout"><button class="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">Logout</button></form>
+      </div>
+    </header>
+    <!-- Mobile admin menu (shared structure) -->
+    <div id="admin-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="admin-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="admin-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/admin/dashboard" class="block px-3 py-2 rounded bg-gray-800 text-white">Dashboard</a></li>
+          <li><a href="/admin/students" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Students</a></li>
+          <li><a href="/admin/courses" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Courses</a></li>
+          <li><a href="/admin/notes" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Notes</a></li>
+          <li><a href="/admin/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="flex-1 p-6 md:p-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-sm font-semibold text-gray-500">Total Students</h3>
+          <p class="mt-3 text-3xl font-extrabold" id="stat-students">--</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-sm font-semibold text-gray-500">Courses</h3>
+          <p class="mt-3 text-3xl font-extrabold" id="stat-courses">--</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-sm font-semibold text-gray-500">Blog Posts</h3>
+          <p class="mt-3 text-3xl font-extrabold" id="stat-blogs">--</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-sm font-semibold text-gray-500">New Admissions</h3>
+          <p class="mt-3 text-3xl font-extrabold" id="stat-admissions">--</p>
+        </div>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div class="xl:col-span-2 bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Recent Students</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b">
+                  <th class="py-2 pr-4">Username</th>
+                  <th class="py-2 pr-4">Name</th>
+                  <th class="py-2 pr-4">City</th>
+                  <th class="py-2 pr-4">Email</th>
+                </tr>
+              </thead>
+              <tbody id="recent-students" class="divide-y"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+          <div class="space-y-3">
+            <a href="/admin/courses" class="block w-full px-4 py-2 bg-gray-900 text-white rounded-md text-sm text-center">Manage Courses</a>
+            <a href="/admin/students" class="block w-full px-4 py-2 bg-gray-900 text-white rounded-md text-sm text-center">Manage Students</a>
+            <a href="/admin/notes" class="block w-full px-4 py-2 bg-gray-900 text-white rounded-md text-sm text-center">Manage Notes</a>
+            <button class="w-full px-4 py-2 bg-gray-900 text-white rounded-md text-sm">Add Blog Post</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>feather.replace();</script>
+  <script>
+    (function(){
+      const btn = document.getElementById('admin-menu-button');
+      const menu = document.getElementById('admin-mobile-menu');
+      const backdrop = document.getElementById('admin-mobile-backdrop');
+      const closeBtn = document.getElementById('admin-mobile-close');
+      function show(){ menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu) btn.addEventListener('click', e=>{ e.preventDefault(); show(); });
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      try{ const panel = menu.querySelector('.panel'); if(panel) panel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>setTimeout(hide,50))); }catch(e){}
+      document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') hide(); });
+    })();
+    async function loadStats(){
+      try{
+        const s = await fetch('/api/admin/students');
+        const students = await s.json();
+        document.getElementById('stat-students').textContent = students.length;
+        const recentBody = document.getElementById('recent-students'); recentBody.innerHTML='';
+        students.slice(0,8).forEach(r=>{
+          const tr=document.createElement('tr');
+          tr.innerHTML = `<td class="py-2 pr-4">${r.username}</td><td class="py-2 pr-4">${r.full_name}</td><td class="py-2 pr-4">${r.city}</td><td class="py-2 pr-4">${r.email}</td>`;
+          recentBody.appendChild(tr);
+        });
+      }catch(e){console.error(e);}      
+      try{ const c = await fetch('/api/admin/courses'); if(c.ok){ const courses = await c.json(); document.getElementById('stat-courses').textContent = courses.length; } }
+      catch(e){}
+      try{
+        const b = await fetch('/api/admin/blogs');
+        if(b.ok){
+          const blogs = await b.json();
+          document.getElementById('stat-blogs').textContent = blogs.length;
+        }
+      }catch(e){}
+      // placeholder counts
+      document.getElementById('stat-admissions').textContent = '--';
+    }
+    loadStats();
+  </script>
+</body>
+</html>

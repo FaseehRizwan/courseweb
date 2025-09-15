@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Aurelius University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fdfdfd; 
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .page-header-bg {
+            background-image: linear-gradient(rgba(10, 20, 39, 0.85), rgba(10, 20, 39, 0.85)), url('https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .header-scrolled {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-scrolled a, .header-scrolled button, .header-scrolled span {
+            color: #1a202c !important; /* text-gray-900 */
+        }
+        .header-scrolled .apply-btn {
+             background-color: #c09a59; /* Custom Gold */
+             color: white !important;
+        }
+        .header-scrolled .apply-btn:hover {
+            background-color: #b38e52;
+        }
+        .nav-link-underline {
+            position: relative;
+        }
+        .nav-link-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #c09a59;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link-underline:hover::after, .nav-link-underline.active::after {
+            width: 100%;
+        }
+
+        .section-title-underline {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #c09a59;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-screen-2xl mx-auto bg-white">
+        <!-- Header -->
+         <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 transition-all duration-300">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center space-x-2 text-white">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-10">
+                        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+                        <a href="/about" class="nav-link-underline active text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+                        <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+                        <a href="/notes" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+                        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+                        <a href="/blog" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+                        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+                        <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+                        <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+                        
+                    </nav>
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+                         <button class="md:hidden text-white" id="menu-button">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+             <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+                <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+                <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+                <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+                <a href="/notes" class="block text-white text-center py-4 hover:bg-gray-800">Notes</a>
+                <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+                <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+                <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+                <a href="/login" class="block text-white text-center py-4 hover:bg-gray-800">Login</a>
+                <a href="/register" class="block text-white text-center py-4 hover:bg-gray-800">Register</a>
+                <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+            </div>
+        </header>
+
+
+        <main>
+            <!-- Page Header -->
+            <section class="relative page-header-bg overflow-hidden">
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 pb-32 text-white text-center">
+                    <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight animate-on-scroll">About Aurelius University</h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-300 animate-on-scroll" style="transition-delay: 0.2s;">
+                        A tradition of excellence, a future of promise.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Mission and Vision Section -->
+             <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="animate-on-scroll">
+                        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">Our Mission</h2>
+                        <p class="mt-6 text-lg text-gray-600">To cultivate a diverse community of scholars and leaders dedicated to the pursuit of knowledge, the discovery of truth, and service to society. We are committed to fostering an environment of critical inquiry, intellectual curiosity, and ethical engagement that empowers our students to address the complex challenges of the 21st century.</p>
+                    </div>
+                    <div class="animate-on-scroll" style="transition-delay: 0.2s;">
+                         <img src="https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=2070&auto=format&fit=crop" class="rounded-lg shadow-2xl" alt="A team discussing ideas">
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="py-24 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 section-title-underline">A Legacy of Distinction</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                        <div class="animate-on-scroll">
+                             <img src="https://images.unsplash.com/photo-1592289525230-d3b2a59cca89?q=80&w=1974&auto=format&fit=crop" class="rounded-lg shadow-2xl" alt="Historic university building">
+                        </div>
+                        <div class="animate-on-scroll" style="transition-delay: 0.2s;">
+                             <p class="text-lg text-gray-600 mb-4">Founded in 1901, Aurelius University began as a small liberal arts college with a bold vision: to provide an education that was both classical in its depth and progressive in its outlook. From our first graduating class of just 12 students, we have grown into a world-renowned institution without losing sight of our founding principles.</p>
+                             <p class="text-lg text-gray-600">Throughout our history, we have been at the forefront of academic innovation, establishing one of the nation's first interdisciplinary studies programs and championing access to higher education for all. Today, our historic campus stands as a testament to more than a century of academic achievement and community building.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leadership Section -->
+            <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                     <div class="text-center mb-16">
+                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 section-title-underline">Meet Our Leadership</h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+                        <!-- Leader 1 -->
+                        <div class="animate-on-scroll">
+                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop" class="w-48 h-48 mx-auto rounded-full shadow-lg" alt="University President">
+                            <h4 class="mt-6 text-2xl font-bold text-gray-900">Dr. Alistair Finch</h4>
+                            <p class="text-[#c09a59] font-semibold">University President</p>
+                        </div>
+                        <!-- Leader 2 -->
+                        <div class="animate-on-scroll" style="transition-delay: 0.2s;">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop" class="w-48 h-48 mx-auto rounded-full shadow-lg" alt="Provost">
+                            <h4 class="mt-6 text-2xl font-bold text-gray-900">Dr. Eleanor Vance</h4>
+                            <p class="text-[#c09a59] font-semibold">Provost & VP for Academic Affairs</p>
+                        </div>
+                        <!-- Leader 3 -->
+                        <div class="animate-on-scroll" style="transition-delay: 0.4s;">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" class="w-48 h-48 mx-auto rounded-full shadow-lg" alt="Dean of Students">
+                            <h4 class="mt-6 text-2xl font-bold text-gray-900">Dr. Marcus Thorne</h4>
+                            <p class="text-[#c09a59] font-semibold">Dean of Student Affairs</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+             <!-- CTA Section -->
+            <section class="bg-gray-800">
+                <div class="max-w-4xl mx-auto text-center py-20 px-4 sm:px-6 lg:px-8">
+                     <h2 class="text-4xl font-extrabold text-white animate-on-scroll">Become a Part of Our Story</h2>
+                    <p class="mt-4 text-lg text-gray-300 animate-on-scroll" style="transition-delay: 0.2s;">
+                        Your journey of discovery starts here. Explore our programs and find out how you can join the Aurelius legacy.
+                    </p>
+                    <a href="/apply" class="mt-8 inline-block bg-[#c09a59] text-white font-bold py-4 px-10 rounded-md hover:bg-[#b38e52] transition-all duration-300 transform hover:scale-105 shadow-lg animate-on-scroll" style="transition-delay: 0.4s;">
+                        Apply Today
+                    </a>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white">
+             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <!-- About -->
+                    <div class="col-span-1 md:col-span-2">
+                         <h3 class="text-xl font-semibold tracking-wider">AURELIUS UNIVERSITY</h3>
+                         <p class="mt-4 text-gray-400">Illuminating minds and shaping the future since 1901.</p>
+                    </div>
+                     <!-- Links -->
+                    <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">EXPLORE</h4>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="/about" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                            <li><a href="/apply" class="text-gray-400 hover:text-white transition-colors">Admissions</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">News & Events</a></li>
+                            <li><a href="/contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Social -->
+                     <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">CONNECT</h4>
+                        <div class="flex items-center space-x-4 mt-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-16 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm">&copy; 2025 Aurelius University. All Rights Reserved.</p>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm mt-4 md:mt-0">Privacy Policy</a>
+                </div>
+             </div>
+        </footer>
+    </div>
+
+    <!-- use shared header/main script -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
+       

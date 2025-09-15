@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Courses | Student - Aurelius</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+  body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+  .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:.15s;}
+  .sidebar-link:hover{background:#111827;color:#fff;}
+  /* student mobile sidebar overlay (shared) */
+  #student-mobile-menu { display:none; position:fixed; inset:0; z-index:60; }
+  #student-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+  #student-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:320px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+  @media (max-width: 768px) { #student-mobile-menu.show { display:block; } }
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+ <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/student/dashboard" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/student/profile" class="sidebar-link"><i data-feather="user" class="w-4"></i><span>Profile</span></a>
+      <a href="/student/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/student/notes" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/student/blogs" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4"><button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md">Logout</button></form>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow flex items-center justify-between px-6">
+      <div class="flex items-center gap-3">
+        <button id="student-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold">Available Courses</h1>
+      </div>
+      <a href="/student/dashboard" class="text-sm text-gray-600 hover:text-gray-900">Back</a>
+    </header>
+
+    <!-- Student mobile menu -->
+    <div id="student-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="student-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="student-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/student/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/student/profile" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Profile</a></li>
+          <li><a href="/student/courses" class="block px-3 py-2 rounded bg-gray-800 text-white">Courses</a></li>
+          <li><a href="/student/notes" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Notes</a></li>
+          <li><a href="/student/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="flex-1 p-6 md:p-10">
+      <div class="mb-6 flex space-x-4">
+        <button id="tab-public" class="px-4 py-2 rounded bg-gray-900 text-white text-sm font-semibold">Public Courses</button>
+        <button id="tab-auth" class="px-4 py-2 rounded bg-white border text-sm font-semibold">Authorized Courses</button>
+      </div>
+
+      <div id="public-wrapper">
+        <div class="bg-white rounded-lg shadow p-5 mb-6">
+          <form id="filter-form" class="grid gap-4 md:grid-cols-5 text-sm">
+            <input id="search" type="text" placeholder="Search title..." class="border px-3 py-2 rounded md:col-span-2">
+            <select id="category" class="border px-3 py-2 rounded">
+              <option value="">All Categories</option>
+            </select>
+            <select id="duration" class="border px-3 py-2 rounded">
+              <option value="">Any Duration</option>
+              <option value="4">≤ 4 Weeks</option>
+              <option value="6">≤ 6 Weeks</option>
+              <option value="8">≤ 8 Weeks</option>
+              <option value="10">≤ 10 Weeks</option>
+            </select>
+            <button class="bg-gray-900 text-white rounded px-4 py-2">Apply</button>
+            <button type="button" id="reset-btn" class="bg-gray-200 text-gray-800 rounded px-4 py-2">Reset</button>
+          </form>
+        </div>
+
+        <div id="courses-grid" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
+        <div id="empty" class="hidden text-center text-gray-500 text-sm py-16">No courses match your filters.</div>
+      </div>
+
+      <div id="auth-wrapper" class="hidden">
+        <div id="auth-grid" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
+        <div id="auth-empty" class="hidden text-center text-gray-500 text-sm py-16">No authorized courses available.</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    feather.replace();
+    (function(){
+      const btn = document.getElementById('student-menu-button');
+      const menu = document.getElementById('student-mobile-menu');
+      const backdrop = document.getElementById('student-mobile-backdrop');
+      const closeBtn = document.getElementById('student-mobile-close');
+      function show(){ menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu) btn.addEventListener('click', e=>{ e.preventDefault(); show(); });
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      try{ const panel = menu.querySelector('.panel'); if(panel) panel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>setTimeout(hide,50))); }catch(e){}
+      document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') hide(); });
+    })();
+    // escapeHtml: prevent XSS when injecting strings into innerHTML
+    function escapeHtml(s){
+      if (s === undefined || s === null) return '';
+      return String(s).replace(/[&<>"']/g, function(c){
+        return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];
+      });
+    }
+    const grid = document.getElementById('courses-grid');
+    const empty = document.getElementById('empty');
+    let allCourses = [];
+
+    function normWeeks(str){
+      if(!str) return null;
+      const m = String(str).match(/(\d+)/);
+      return m? parseInt(m[1],10):null;
+    }
+
+    function render(list){
+      grid.innerHTML='';
+      if(!list.length){ empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      list.forEach(c=>{
+        const weeks = normWeeks(c.duration);
+        const card = document.createElement('div');
+        card.className='bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col overflow-hidden';
+        card.innerHTML=`
+          <div class="relative">
+            <img src="${c.imageUrl||'https://placehold.co/600x360'}" alt="" class="w-full h-44 object-cover">
+            ${c.category? `<span class="absolute top-3 right-3 bg-[#c09a59] text-white text-xs font-semibold px-2.5 py-1 rounded">${c.category}</span>`:''}
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-semibold text-lg line-clamp-2">${c.title}</h3>
+            <p class="text-sm text-gray-600 mt-2 flex-1 line-clamp-3">${c.excerpt || c.description?.slice(0,140) || ''}</p>
+            <div class="flex items-center justify-between text-xs text-gray-500 mt-4 pt-3 border-t">
+              <span class="flex items-center gap-1"><i data-feather="play-circle" class="w-4 h-4"></i>${(c.lectures||[]).length} Lectures</span>
+              <span>${c.duration||''}</span>
+            </div>
+            <a href="/student/course-detail?id=${c.id}" class="mt-4 w-full text-center bg-gray-900 hover:bg-[#c09a59] text-white text-sm font-medium py-2.5 rounded transition">View Details</a>
+          </div>`;
+        grid.appendChild(card);
+      });
+      feather.replace();
+    }
+
+    function populateFilters(){
+      const catSel = document.getElementById('category');
+      const cats = Array.from(new Set(allCourses.map(c=>c.category).filter(Boolean))).sort();
+      catSel.innerHTML = '<option value="">All Categories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    }
+
+    function applyFilters(){
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const cat = document.getElementById('category').value;
+      const dur = document.getElementById('duration').value;
+      const list = allCourses.filter(c=>{
+        if(q && !c.title.toLowerCase().includes(q)) return false;
+        if(cat && c.category !== cat) return false;
+        if(dur){
+          const w = normWeeks(c.duration);
+            if(w===null || w > parseInt(dur,10)) return false;
+        }
+        return true;
+      });
+      render(list);
+    }
+
+    document.getElementById('filter-form').addEventListener('submit', e=>{
+      e.preventDefault(); applyFilters();
+    });
+    document.getElementById('reset-btn').addEventListener('click', ()=>{
+      document.getElementById('search').value='';
+      document.getElementById('category').value='';
+      document.getElementById('duration').value='';
+      render(allCourses);
+    });
+
+    fetch('/api/courses/public')
+      .then(r=>r.json())
+      .then(data=>{
+        allCourses = data || [];
+        populateFilters();
+        render(allCourses);
+      })
+      .catch(()=>{
+        grid.innerHTML='<div class="col-span-full text-center text-red-500 py-10 text-sm">Failed to load courses.</div>';
+      });
+
+    // Authorized courses
+    let authCourses = [];
+    const authGrid = document.getElementById('auth-grid');
+    const authEmpty = document.getElementById('auth-empty');
+
+    function renderAuth(){
+      authGrid.innerHTML='';
+      if(!authCourses.length){ authEmpty.classList.remove('hidden'); return; }
+      authEmpty.classList.add('hidden');
+      authCourses.forEach(c=>{
+        const card=document.createElement('div');
+        card.className='bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col overflow-hidden';
+        card.innerHTML=`
+          <div class="relative">
+            <img src="${c.image_url||'https://placehold.co/600x360'}" class="w-full h-44 object-cover">
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-semibold text-lg line-clamp-2">${c.title}</h3>
+            <p class="text-sm text-gray-600 mt-2 flex-1 line-clamp-3">${(c.description||'').slice(0,140)}</p>
+            <div class="flex items-center justify-between text-xs text-gray-500 mt-4 pt-3 border-t">
+              <span class="flex items-center gap-1"><i data-feather="play-circle" class="w-4 h-4"></i>${c.lectures||0} Lectures</span>
+            </div>
+            <a href="/student/course-detail?id=${c.id}&type=auth" class="mt-4 w-full text-center bg-gray-900 hover:bg-[#c09a59] text-white text-sm font-medium py-2.5 rounded transition">View Details</a>
+          </div>`;
+        authGrid.appendChild(card);
+      });
+      feather.replace();
+    }
+
+    // Tabs
+    const tabPublic=document.getElementById('tab-public');
+    const tabAuth=document.getElementById('tab-auth');
+    const publicWrapper=document.getElementById('public-wrapper');
+    const authWrapper=document.getElementById('auth-wrapper');
+
+    function setTab(which){
+      if(which==='public'){
+        publicWrapper.classList.remove('hidden');
+        authWrapper.classList.add('hidden');
+        tabPublic.classList.add('bg-gray-900','text-white');
+        tabAuth.classList.remove('bg-gray-900','text-white');
+        tabAuth.classList.add('bg-white','border');
+        tabPublic.classList.remove('bg-white','border');
+      } else {
+        authWrapper.classList.remove('hidden');
+        publicWrapper.classList.add('hidden');
+        tabAuth.classList.add('bg-gray-900','text-white');
+        tabPublic.classList.remove('bg-gray-900','text-white');
+        tabPublic.classList.add('bg-white','border');
+        tabAuth.classList.remove('bg-white','border');
+      }
+    }
+    tabPublic.addEventListener('click',()=>setTab('public'));
+    tabAuth.addEventListener('click',()=>setTab('auth'));
+
+    // Fetch authorized courses (parallel)
+    fetch('/api/student/auth-courses')
+      .then(r=> r.ok ? r.json():[])
+      .then(data=>{ authCourses=data; renderAuth(); })
+      .catch(()=>{ authCourses=[]; renderAuth(); });
+  </script>
+</body>
+</html>

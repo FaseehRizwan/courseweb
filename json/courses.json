@@ -1,0 +1,125 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction to Web Development",
+    "instructor": "Dr. Evelyn Reed",
+    "duration": "8 Weeks",
+    "category": "Technology",
+    "excerpt": "Learn the fundamentals of HTML, CSS, and JavaScript to build modern, responsive websites from scratch.",
+    "imageUrl": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop",
+    "lectures": [
+      {
+        "id": "lec-1-1",
+        "title": "Welcome & Course Overview",
+        "duration": "5:30",
+        "description": "<p>Welcome to the course! Overview of structure and goals.</p>",
+        "mainVideo": { "id": "vid-1-1-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "name": "Intro" },
+        "supportingVideos": [],
+        "resources": [
+          { "id": "res-1-1a", "name": "Course Syllabus", "type": "PDF", "url": "#" }
+        ]
+      },
+      {
+        "id": "lec-1-2",
+        "title": "The Basics of HTML",
+        "duration": "25:10",
+        "description": "<p>Dive into the foundational building block of the web: HTML. We'll explore essential tags, document structure, and semantic HTML5 elements to create well-structured web pages.</p>",
+        "mainVideo": { "id": "vid-1-2-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", "name": "HTML Basics" },
+        "supportingVideos": [],
+        "resources": [
+          {
+            "id": "res-1-2a",
+            "name": "HTML Cheat Sheet",
+            "type": "PDF",
+            "url": "#"
+          },
+          {
+            "id": "res-1-2b",
+            "name": "MDN HTML Docs",
+            "type": "Link",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/HTML"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Digital Marketing Masterclass",
+    "instructor": "Prof. Alistair Finch",
+    "duration": "6 Weeks",
+    "category": "Business",
+    "excerpt": "Master the art of online marketing, from SEO and content strategy to social media and paid advertising.",
+    "imageUrl": "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2071&auto=format&fit=crop",
+    "lectures": [
+      {
+        "id": "lec-2-1",
+        "title": "Foundations of Digital Marketing",
+        "duration": "15:00",
+        "description": "<p>Understand the digital marketing ecosystem, key channels, and how to develop a cohesive strategy for your business or brand.</p>",
+        "mainVideo": { "id": "vid-2-1-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", "name": "Foundations" },
+        "supportingVideos": [],
+        "resources": [
+          {
+            "id": "res-2-1a",
+            "name": "Marketing Plan Template",
+            "type": "DOCX",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "id": "lec-2-2",
+        "title": "Search Engine Optimization (SEO)",
+        "duration": "40:20",
+        "description": "<p>Uncover the secrets of ranking higher on Google. We'll cover on-page, off-page, and technical SEO techniques to drive organic traffic.</p>",
+        "mainVideo": { "id": "vid-2-2-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", "name": "SEO Deep Dive" },
+        "supportingVideos": [],
+        "resources": [
+          {
+            "id": "res-2-2a",
+            "name": "Keyword Research Guide",
+            "type": "PDF",
+            "url": "#"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Introduction to Python Programming",
+    "instructor": "Dr. Maria Sanchez",
+    "duration": "10 Weeks",
+    "category": "Technology",
+    "excerpt": "A beginner-friendly introduction to Python, one of the world's most popular and versatile programming languages.",
+    "imageUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop",
+    "lectures": [
+      {
+        "id": "lec-3-1",
+        "title": "Setting Up Your Environment",
+        "duration": "12:30",
+        "description": "<p>Let's get started by installing Python and setting up our code editor (VS Code). A smooth setup process is key to a great learning experience.</p>",
+        "mainVideo": { "id": "vid-3-1-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", "name": "Environment Setup" },
+        "supportingVideos": [],
+        "resources": [
+          {
+            "id": "res-3-1a",
+            "name": "Python Installation Guide",
+            "type": "Link",
+            "url": "https://www.python.org/downloads/"
+          }
+        ]
+      },
+      {
+        "id": "lec-3-2",
+        "title": "Variables and Data Types",
+        "duration": "28:50",
+        "description": "<p>Learn about the fundamental data types in Python: strings, integers, floats, and booleans. Understand how to store and manipulate data using variables.</p>",
+        "mainVideo": { "id": "vid-3-2-main", "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", "name": "Variables & Types" },
+        "supportingVideos": [],
+        "resources": []
+      }
+    ]
+  }
+]

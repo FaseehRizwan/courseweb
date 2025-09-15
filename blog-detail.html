@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post | Aurelius University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa; 
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .header-scrolled {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-scrolled a, .header-scrolled button, .header-scrolled span {
+            color: #1a202c !important; /* text-gray-900 */
+        }
+        .header-scrolled .apply-btn {
+             background-color: #c09a59; /* Custom Gold */
+             color: white !important;
+        }
+        .header-scrolled .apply-btn:hover {
+            background-color: #b38e52;
+        }
+        .nav-link-underline {
+            position: relative;
+        }
+        .nav-link-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #c09a59;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link-underline:hover::after, .nav-link-underline.active::after {
+            width: 100%;
+        }
+        .prose p {
+            margin-bottom: 1.25em;
+        }
+        .prose h2 {
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-screen-2xl mx-auto bg-white">
+        <!-- Header -->
+         <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 transition-all duration-300">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center space-x-2 text-white">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-10">
+                        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+                        <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+                        <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+                        <a href="/notes" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+                        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+                        <a href="/blog" class="nav-link-underline active text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+                        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+                        <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+                        <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+                        
+                    </nav>
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+                         <button class="md:hidden text-white" id="menu-button">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+             <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+                <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+                <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+                <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+                <a href="/notes" class="block text-white text-center py-4 hover:bg-gray-800">Notes</a>
+                <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+                <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+                <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+                <a href="/login" class="block text-white text-center py-4 hover:bg-gray-800">Login</a>
+                <a href="/register" class="block text-white text-center py-4 hover:bg-gray-800">Register</a>
+                <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+            </div>
+        </header>
+
+
+        <main class="pt-20">
+            <!-- Blog Post Section -->
+            <section class="py-24 bg-white">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div id="blog-post-container">
+                        <!-- Post content will be injected here -->
+                        <div class="text-center py-20">
+                             <h2 class="text-3xl font-bold text-gray-700">Loading Post...</h2>
+                        </div>
+                    </div>
+                    <div class="mt-16 text-center">
+                        <a href="/blog" class="text-[#c09a59] font-bold hover:text-[#a07e49] text-lg">&larr; Back to All Posts</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white">
+            <!-- Footer content from other pages -->
+        </footer>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Page-specific: Fetch and display the specific blog post
+        document.addEventListener('DOMContentLoaded', () => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const postId = urlParams.get('id');
+          const postContainer = document.getElementById('blog-post-container');
+          if(!postId){ postContainer.innerHTML='<h1 class="text-3xl font-bold text-center">Error: Post ID not found.</h1>'; return; }
+          fetch('/api/blogs/public/'+postId)
+           .then(r=> r.ok ? r.json() : Promise.reject('not_found'))
+           .then(post=>{
+             document.title = `${post.title} | Aurelius University`;
+             postContainer.innerHTML = `
+               <article class="prose lg:prose-xl max-w-none">
+                 <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">${post.title}</h1>
+                 <div class="mt-4 mb-8 text-gray-500"><span>By ${post.author||'Staff'}</span> | <span>${(post.created_at||'').split(' ').shift()}</span></div>
+                 <img src="${post.image_url||'https://placehold.co/1200x600'}" alt="${post.title}" class="w-full rounded-lg shadow-lg mb-12">
+                 <div class="text-gray-700 leading-relaxed">${post.content||''}</div>
+               </article>`;
+           })
+           .catch(()=> postContainer.innerHTML='<h1 class="text-3xl font-bold text-center">Post not found or error loading post.</h1>');
+        });
+    </script>
+</body>
+</html>
+               

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Manage Blogs | Admin - Aurelius</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+  :root {
+    --brand-gold: #c09a59;
+    --brand-dark: #111827;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:all .15s;}
+  .sidebar-link:hover, .sidebar-link.active{background:var(--brand-dark);color:#fff;}
+  
+  /* Editor styles from the new version */
+  .editor-toolbar { 
+    display:flex; 
+    gap:4px; 
+    flex-wrap:wrap; 
+    background:#f9fafb; 
+    padding:8px; 
+    border:1px solid #d1d5db; 
+    border-bottom:none;
+    border-top-left-radius:8px; 
+    border-top-right-radius:8px;
+    align-items: center;
+  }
+  .editor-btn, .editor-select { 
+    background:white; 
+    border:1px solid #d1d5db; 
+    padding:6px 8px; 
+    border-radius:4px; 
+    cursor:pointer; 
+    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:34px; height:34px;
+    transition: all 0.2s;
+  }
+  .editor-btn:hover, .editor-select:hover { background:#f3f4f6; border-color:#9ca3af; }
+  .editor-select { width:auto; padding: 0 8px; height: 34px; -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: none; }
+  
+  .editor-btn[title*="Color"] {
+    position: relative;
+    overflow: hidden;
+  }
+  .color-input {
+    position: absolute;
+    top: -10px; left: -10px;
+    width: 60px; height: 60px;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .toolbar-separator {
+    width: 1px;
+    background-color: #d1d5db;
+    margin: 0 6px;
+    align-self: stretch;
+    height: 20px;
+  }
+
+  .editor { 
+    min-height:300px; 
+    border:1px solid #d1d5db; 
+    border-radius:8px; 
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding:16px; 
+    background:white; 
+    overflow:auto; 
+    font-size:16px;
+    line-height:1.6;
+  }
+  .editor:focus { outline:2px solid var(--brand-gold); border-color:var(--brand-gold); }
+  .editor > :first-child { margin-top:0;}
+  .editor > :last-child { margin-bottom:0;}
+
+  .tags-input { width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; }
+  .meta-row { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:12px; }
+  
+  /* Preview modal from original */
+  .preview-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:60; }
+  .preview-window { background:white; width:calc(100% - 40px); max-width:900px; max-height:90vh; overflow:auto; border-radius:8px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+  /* Responsive admin tweaks */
+  @media (max-width: 768px) {
+    .editor-toolbar { overflow-x: auto; -webkit-overflow-scrolling: touch; gap:6px; padding:6px; }
+    .editor-btn, .editor-select { width: auto !important; min-width: 36px; height:34px; padding:6px 8px; }
+    .editor { min-height: 260px; padding:12px; }
+  }
+
+  /* Mobile sidebar overlay for admin pages */
+  #admin-mobile-menu { display: none; position: fixed; inset: 0; z-index: 70; }
+  #admin-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+  #admin-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:360px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+  @media (max-width: 768px) { #admin-mobile-menu.show { display:block; } }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex font-sans">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/admin/dashboard" class="sidebar-link"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/admin/students" class="sidebar-link"><i data-feather="users" class="w-4"></i><span>Students</span></a>
+      <a href="/admin/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/admin/notes" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/admin/blogs" class="sidebar-link active"><i data-feather="edit" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4">
+      <button type="submit" class="w-full bg-[var(--brand-gold)] hover:opacity-90 text-white font-semibold py-2 rounded-md transition flex items-center justify-center space-x-2"><i data-feather="log-out" class="w-4"></i><span>Logout</span></button>
+    </form>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 md:px-8">
+      <div class="flex items-center gap-3">
+        <button id="admin-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold text-gray-800">Manage Blogs</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900">View site</a>
+        <form method="post" action="/logout" style="display:inline;margin:0">
+          <button type="submit" class="text-sm bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Mobile admin menu (cloned simplified links) -->
+    <div id="admin-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="admin-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="admin-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/admin/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/admin/students" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Students</a></li>
+          <li><a href="/admin/courses" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Courses</a></li>
+          <li><a href="/admin/notes" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Notes</a></li>
+          <li><a href="/admin/blogs" class="block px-3 py-2 rounded bg-gray-800 text-white">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="flex-1 p-6 space-y-10">
+      <div class="grid lg:grid-cols-5 gap-6">
+        <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-3">
+          <h2 class="font-semibold text-xl mb-4 text-gray-700">Blog Editor</h2>
+          <form id="blog-form" class="space-y-4" enctype="multipart/form-data">
+            <input name="title" required placeholder="Blog Post Title" class="w-full border-gray-300 rounded-md px-3 py-2 text-lg focus:ring-2 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]" />
+            <input name="excerpt" placeholder="Excerpt (a short summary for the post)" class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]" />
+            
+            <div class="editor-toolbar" role="toolbar">
+              <select id="font-family-select" class="editor-select text-sm" title="Font Family">
+                <option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Helvetica">Helvetica</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Courier New">Courier New</option>
+              </select>
+              <select id="font-size-select" class="editor-select text-sm" title="Font Size">
+                 <option value="">Size</option><option value="12">12px</option><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="24">24px</option><option value="32">32px</option>
+              </select>
+              <!-- Media size presets -->
+              <select id="image-size-select" class="editor-select text-sm" title="Image size">
+                 <option value="">Img size</option>
+                 <option value="auto">Auto</option>
+                 <option value="320">Small (320px)</option>
+                 <option value="640">Medium (640px)</option>
+                 <option value="960">Large (960px)</option>
+                 <option value="100%">Full width</option>
+              </select>
+              <select id="video-size-select" class="editor-select text-sm" title="Video size">
+                 <option value="">Vid size</option>
+                 <option value="auto">Auto</option>
+                 <option value="320">Small (320px)</option>
+                 <option value="640">Medium (640px)</option>
+                 <option value="960">Large (960px)</option>
+                 <option value="100%">Full width</option>
+              </select>
+              <button type="button" id="apply-media-size-btn" class="editor-btn" title="Apply size to selected media"><i data-feather="maximize" class="w-4 h-4"></i></button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="editor-btn" data-cmd="bold" title="Bold"><i data-feather="bold" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="italic" title="Italic"><i data-feather="italic" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="underline" title="Underline"><i data-feather="underline" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="strikeThrough" title="Strikethrough"><i data-feather="delete" class="w-4 h-4"></i></button>
+               <div class="toolbar-separator"></div>
+              <label class="editor-btn" title="Text Color"><i data-feather="type" class="w-4 h-4"></i><input type="color" id="fore-color-input" class="color-input"></label>
+              <label class="editor-btn" title="Highlight Color"><i data-feather="edit-3" class="w-4 h-4"></i><input type="color" id="back-color-input" class="color-input"></label>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="editor-btn" data-cmd="justifyLeft" title="Align Left"><i data-feather="align-left" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="justifyCenter" title="Align Center"><i data-feather="align-center" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="justifyRight" title="Align Right"><i data-feather="align-right" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="justifyFull" title="Align Justify"><i data-feather="align-justify" class="w-4 h-4"></i></button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="editor-btn" data-cmd="insertUnorderedList" title="Bullet List"><i data-feather="list" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="insertOrderedList" title="Numbered List"><i data-feather="list" class="w-4 h-4" style="transform: scale(0.8)"></i></button>
+              <button type="button" class="editor-btn" data-cmd="outdent" title="Outdent"><i data-feather="chevrons-left" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="indent" title="Indent"><i data-feather="chevrons-right" class="w-4 h-4"></i></button>
+              <div class="toolbar-separator"></div>
+              <select id="heading-select" class="editor-select text-sm" title="Heading">
+                <option value="p">Paragraph</option><option value="h1">H1</option><option value="h2">H2</option><option value="h3">H3</option><option value="h4">H4</option>
+              </select>
+              <button type="button" class="editor-btn" data-cmd="formatBlock" data-value="blockquote" title="Quote"> <i data-feather="message-square" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" data-cmd="formatBlock" data-value="pre" title="Code Block"><i data-feather="code" class="w-4 h-4"></i></button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="editor-btn" id="link-btn" title="Insert Link"><i data-feather="link" class="w-4 h-4"></i></button>
+              <label class="editor-btn" title="Insert image"><input id="toolbar-image-input" type="file" accept="image/*" class="hidden"><i data-feather="image" class="w-4 h-4"></i></label>
+              <label class="editor-btn" title="Insert video"><input id="toolbar-video-input" type="file" accept="video/*" class="hidden"><i data-feather="video" class="w-4 h-4"></i></label>
+              <label class="editor-btn" title="Attach resource"><input id="toolbar-resource-input" type="file" accept="*/*" class="hidden"><i data-feather="paperclip" class="w-4 h-4"></i></label>
+              <button type="button" class="editor-btn" data-cmd="insertHorizontalRule" title="Insert Horizontal Line"><i data-feather="minus" class="w-4 h-4"></i></button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="editor-btn" data-cmd="removeFormat" title="Clear Formatting"><i data-feather="x" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" id="undo-btn" title="Undo"><i data-feather="corner-up-left" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn" id="redo-btn" title="Redo"><i data-feather="corner-up-right" class="w-4 h-4"></i></button>
+              <button type="button" class="editor-btn ml-auto" id="preview-btn">Preview</button>
+            </div>
+
+            <div id="editor" class="editor prose max-w-none" contenteditable="true"></div>
+            <input type="hidden" name="content" id="hidden-content">
+
+            <div class="meta-row">
+              <div class="field">
+                <label class="block text-xs text-gray-600 mb-1">Tags (comma separated)</label>
+                <input name="tags" id="tags" class="tags-input focus:ring-2 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]" placeholder="e.g. research, campus" />
+              </div>
+              <div class="field">
+                <label class="block text-xs text-gray-600 mb-1">Status</label>
+                <select name="is_public" class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]">
+                  <option value="1">Public</option>
+                  <option value="0">Draft</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="block text-xs text-gray-600 mb-1">Publish date</label>
+                <input type="datetime-local" name="publish_date" class="w-full border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--brand-gold)] focus:border-[var(--brand-gold)]" />
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+              <div class="flex-1">
+                <label class="text-sm font-medium text-gray-700">Featured Image</label>
+                <input type="file" name="image" id="image-upload" class="text-sm mt-1 block w-full" />
+              </div>
+              <button id="blog-save" class="bg-[var(--brand-gold)] text-white px-6 py-2 rounded-md hover:opacity-90 font-semibold">Save</button>
+              <button type="button" id="blog-reset" class="text-sm text-gray-600 hover:text-red-600">Reset</button>
+            </div>
+          </form>
+
+          <div id="preview-root" style="display:none"></div>
+
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-2">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="font-semibold text-xl text-gray-700">Blogs</h2>
+            <div class="text-sm space-x-2">
+              <button id="btn-filter-all" class="px-3 py-1 bg-gray-800 text-white rounded-md">All</button>
+              <button id="btn-filter-public" class="px-3 py-1 bg-gray-200 rounded-md">Public</button>
+              <button id="btn-filter-auth" class="px-3 py-1 bg-gray-200 rounded-md">Drafts</button>
+            </div>
+          </div>
+          <div id="blogs-list" class="space-y-3 text-sm"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+<script>
+// THIS SCRIPT SECTION IS RESTORED FROM YOUR ORIGINAL FILE
+// It contains the original data logic for fetching, saving, and deleting.
+// It has been merged with the controls for the new editor toolbar.
+document.addEventListener('DOMContentLoaded', () => {
+  // Helpers
+  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  // Elements
+  const editor = document.getElementById('editor');
+  const hiddenContent = document.getElementById('hidden-content');
+  const blogForm = document.getElementById('blog-form');
+  const resetBtn = document.getElementById('blog-reset');
+  const previewBtn = document.getElementById('preview-btn');
+  const previewRoot = document.getElementById('preview-root');
+
+  if(!editor || !hiddenContent || !blogForm){
+    console.warn('Blog editor: required DOM elements missing, aborting initialization.');
+    return;
+  }
+  
+  // --- Selection save/restore (from original) ---
+  let savedRange = null;
+  function saveSelection(){
+    try{
+      const sel = window.getSelection();
+      if(sel && sel.rangeCount > 0){
+        const range = sel.getRangeAt(0);
+        if(editor.contains(range.commonAncestorContainer)){
+          savedRange = range.cloneRange();
+        }
+      }
+    }catch(e){ savedRange = null; }
+  }
+  function restoreSelection(){
+    try{
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      if(savedRange){
+        sel.addRange(savedRange);
+      } else {
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        sel.addRange(range);
+        savedRange = range.cloneRange();
+      }
+    }catch(e){}
+  }
+
+  document.addEventListener('selectionchange', () => {
+    try{
+      const sel = window.getSelection();
+      if(!sel || !sel.rangeCount) return;
+      const node = sel.anchorNode;
+      if(editor.contains(node)) saveSelection();
+    }catch(e){}
+  });
+
+  ['keyup','mouseup','focus','input'].forEach(ev => editor.addEventListener(ev, saveSelection));
+  
+  if(!editor.innerHTML.trim()) editor.innerHTML = '<p>Start writing your amazing blog post here...</p>';
+
+  function exec(cmd, value = null){
+    restoreSelection();
+    document.execCommand(cmd, false, value);
+    editor.focus();
+    saveSelection();
+  }
+
+  // --- Toolbar wiring (MERGED) ---
+  document.querySelectorAll('.editor-btn[data-cmd]').forEach(el => {
+    el.addEventListener('mousedown', e => e.preventDefault());
+    const cmd = el.dataset.cmd;
+    const value = el.dataset.value || null;
+    el.addEventListener('click', () => exec(cmd, value));
+  });
+
+  document.getElementById('heading-select').addEventListener('change', e => {
+      const value = e.target.value;
+      if(!value) return;
+      exec('formatBlock', `<${value}>`);
+  });
+
+  document.getElementById('font-family-select').addEventListener('change', e => exec('fontName', e.target.value));
+  
+  // Font size handler from original file (more complex span logic)
+  document.getElementById('font-size-select').addEventListener('change', (ev) => {
+      const size = ev.target.value;
+      if (!size) return;
+      restoreSelection();
+      try {
+        const range = savedRange ? savedRange.cloneRange() : null;
+        if (range && !range.collapsed) {
+          const contents = range.extractContents();
+          const span = document.createElement('span');
+          span.style.fontSize = size + 'px';
+          span.appendChild(contents);
+          range.insertNode(span);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          const newRange = document.createRange();
+          newRange.setStartAfter(span);
+          newRange.collapse(true);
+          sel.addRange(newRange);
+          savedRange = newRange.cloneRange();
+        }
+      } catch (err) { console.warn('font size failed', err); }
+      ev.target.value = '';
+      editor.focus();
+      saveSelection();
+    });
+
+  document.getElementById('fore-color-input').addEventListener('input', e => {
+    e.preventDefault();
+    exec('foreColor', e.target.value);
+  });
+  document.getElementById('back-color-input').addEventListener('input', e => {
+    e.preventDefault();
+    exec('hiliteColor', e.target.value);
+  });
+
+  document.getElementById('link-btn').addEventListener('click', () => {
+    const url = prompt('Enter URL:', 'https://');
+    if(url) exec('createLink', url);
+  });
+  
+  document.getElementById('undo-btn').addEventListener('click', () => exec('undo'));
+  document.getElementById('redo-btn').addEventListener('click', () => exec('redo'));
+
+  // Media inputs (from original)
+  // last inserted media element reference (img/video DOM node)
+  let lastInsertedMediaEl = null;
+  
+  // helper to convert preset to CSS width
+  function sizeToStyle(value){
+    if(!value || value==='auto') return { width: null };
+    if(value.endsWith('%')) return { width: value };
+    // numeric px
+    const num = parseInt(value,10);
+    if(Number.isFinite(num)) return { width: num + 'px' };
+    return { width: null };
+  }
+
+  // apply size object to element (img or video)
+  function applySizeToMedia(el, sizeValue){
+    if(!el) return;
+    const s = sizeToStyle(sizeValue);
+    if(s.width){
+      el.style.width = s.width;
+      el.style.maxWidth = (s.width === '100%' ? '100%' : 'none');
+      el.style.height = 'auto';
+      // ensure block-level display for width to take effect
+      el.style.display = 'block';
+      el.style.margin = '0 auto';
+    } else {
+      // reset to auto sizing (but keep max-width:100% for responsive)
+      el.style.width = '';
+      el.style.maxWidth = '100%';
+      el.style.height = 'auto';
+      el.style.display = '';
+      el.style.margin = '';
+    }
+  }
+
+  // returns nearest media element (img or video) from current selection or lastInsertedMediaEl
+  function getSelectedMediaElement(){
+    try{
+      const sel = window.getSelection();
+      if(sel && sel.rangeCount){
+        let node = sel.anchorNode;
+        if(node && node.nodeType===3) node = node.parentNode;
+        while(node && node !== editor){
+          if(node.tagName === 'IMG' || node.tagName === 'VIDEO') return node;
+          node = node.parentNode;
+        }
+      }
+    }catch(e){}
+    return lastInsertedMediaEl;
+  }
+
+  // insert media by creating node so we can apply styles and keep reference
+  function insertMedia(file, type) {
+    if (!file) return;
+    const reader = new FileReader();
+    const beforeRange = savedRange ? savedRange.cloneRange() : null;
+    reader.onload = e => {
+      if(beforeRange) savedRange = beforeRange;
+      restoreSelection();
+      const sel = window.getSelection();
+      const range = sel.rangeCount ? sel.getRangeAt(0) : (()=>{ const r=document.createRange(); r.selectNodeContents(editor); r.collapse(false); return r; })();
+      let node;
+      if(type === 'image'){
+        node = document.createElement('img');
+        node.src = e.target.result;
+        node.alt = file.name;
+        node.style.borderRadius = '8px';
+        node.style.maxWidth = '100%';
+        node.style.height = 'auto';
+        // apply preset size if chosen
+        const preset = document.getElementById('image-size-select').value;
+        applySizeToMedia(node, preset);
+      } else {
+        node = document.createElement('video');
+        node.controls = true;
+        node.src = e.target.result;
+        node.style.borderRadius = '8px';
+        node.style.maxWidth = '100%';
+        node.style.height = 'auto';
+        const preset = document.getElementById('video-size-select').value;
+        applySizeToMedia(node, preset);
+      }
+      try {
+        range.insertNode(node);
+        // move caret after inserted node
+        const newRange = document.createRange(); newRange.setStartAfter(node); newRange.collapse(true);
+        sel.removeAllRanges(); sel.addRange(newRange);
+        lastInsertedMediaEl = node;
+      } catch (err){
+        console.warn('Media insert node failed', err);
+      }
+      saveSelection();
+    };
+    reader.readAsDataURL(file);
+    // clear file input
+    if(type === 'image') document.getElementById('toolbar-image-input').value = '';
+    else document.getElementById('toolbar-video-input').value = '';
+  }
+
+  document.getElementById('toolbar-image-input').addEventListener('change', e => insertMedia(e.target.files[0], 'image'));
+  document.getElementById('toolbar-video-input').addEventListener('change', e => insertMedia(e.target.files[0], 'video'));
+
+  // Apply size button: read selects and apply to currently selected media in editor
+  document.getElementById('apply-media-size-btn').addEventListener('click', () => {
+    const el = getSelectedMediaElement();
+    if(!el){ alert('Place caret on an image or video, or insert media first.'); return; }
+    const isImg = el.tagName === 'IMG';
+    const preset = isImg ? document.getElementById('image-size-select').value : document.getElementById('video-size-select').value;
+    applySizeToMedia(el, preset);
+  });
+
+  // Preview handler (from original)
+  if(previewBtn && previewRoot){
+    previewBtn.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      previewRoot.innerHTML = `
+        <div class="preview-backdrop" id="preview-backdrop">
+          <div class="preview-window">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 class="text-xl font-semibold" style="margin:0">Preview</h3>
+              <button id="close-preview" class="text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <div class="prose max-w-none">${editor.innerHTML}</div>
+          </div>
+        </div>`;
+      previewRoot.style.display = 'block';
+      document.getElementById('close-preview').addEventListener('click', ()=>{ previewRoot.style.display='none'; previewRoot.innerHTML=''; });
+      document.getElementById('preview-backdrop').addEventListener('click', (e)=>{ if(e.target.id==='preview-backdrop'){ previewRoot.style.display='none'; previewRoot.innerHTML=''; }});
+    });
+  }
+
+  // --- Data Management (RESTORED FROM ORIGINAL) ---
+  let editingId = null;
+  let editingSource = 'db';
+  
+  async function fetchAdminDbBlogs(filter){ const res = await fetch('/api/admin/blogs' + (filter ? `?is_public=${filter}` : '')); if(!res.ok) throw new Error('db_fetch_failed'); return res.json(); }
+  async function fetchPublicJsonBlogs(){ const res = await fetch('/json/blogs.json'); if(!res.ok) return []; try { return await res.json(); } catch { return []; } }
+  
+  function renderBlogItem(b){
+    const div = document.createElement('div');
+    div.className = 'border border-gray-200 rounded-lg p-3 flex justify-between items-center gap-2';
+    div.innerHTML = `
+      <div class="flex-1">
+        <div class="font-semibold text-gray-800">${escapeHtml(b.title)}</div>
+        <div class="text-xs text-gray-500 mt-1">${b.is_public ? 'Public' : 'Draft'} ${b.source === 'publicJson' ? ' &bull; (JSON file)' : ''} &bull; ${new Date(b.created_at).toLocaleDateString()}</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button data-id="${b.id}" data-source="${b.source}" class="edit-btn text-xs bg-gray-700 text-white px-3 py-1 rounded-md hover:bg-gray-600">Edit</button>
+        <button data-id="${b.id}" data-source="${b.source}" class="delete-btn text-xs bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-500">Del</button>
+      </div>
+    `;
+    div.querySelector('.edit-btn').addEventListener('click', (e) => editBlog(e.target.dataset.id, e.target.dataset.source));
+    div.querySelector('.delete-btn').addEventListener('click', (e) => delBlog(e.target.dataset.id, e.target.dataset.source));
+    return div;
+  }
+
+  async function loadBlogs(filter){
+    const list = document.getElementById('blogs-list'); if(!list) return;
+    list.innerHTML = `<p class="text-gray-500">Loading...</p>`;
+    try{
+      const [dbRes, pubRes] = await Promise.allSettled([fetchAdminDbBlogs(filter), fetchPublicJsonBlogs()]);
+      let items = [];
+      if(dbRes.status==='fulfilled' && Array.isArray(dbRes.value)) dbRes.value.forEach(b=> items.push({ id:b.id,title:b.title,excerpt:b.excerpt,created_at:b.created_at,author:b.author,is_public:!!b.is_public,source:'db'}));
+      if(pubRes.status==='fulfilled' && Array.isArray(pubRes.value)) pubRes.value.forEach(pb=> items.push({ id:pb.id,title:pb.title,excerpt:pb.excerpt,created_at:pb.date||pb.created_at||'',author:pb.author||'Staff',is_public:true,source:'publicJson'}));
+      if(filter==='1') items = items.filter(i=>i.is_public); else if(filter==='0') items = items.filter(i=>!i.is_public);
+      if(!items.length){ list.innerHTML = '<p class="text-gray-500">No blogs found.</p>'; return; }
+      list.innerHTML=''; items.sort((a,b)=> (Date.parse(b.created_at)||0) - (Date.parse(a.created_at)||0)); items.forEach(it=> list.appendChild(renderBlogItem(it)));
+    }catch(e){ list.innerHTML = '<p class="text-red-500">Failed to load blogs.</p>'; console.error(e); }
+  }
+
+  async function editBlog(id, source){
+    editingId = id; editingSource = source; const f = blogForm;
+    let url = source === 'publicJson' ? `/api/blogs/public/${id}` : `/api/admin/blogs/${id}`;
+    const res = await fetch(url);
+    if(!res.ok) return alert('Failed to fetch blog for editing.');
+    const blog = await res.json();
+    
+    f.title.value = blog.title || '';
+    f.excerpt.value = blog.excerpt || '';
+    editor.innerHTML = blog.content || '<p></p>';
+    f.tags.value = Array.isArray(blog.tags) ? blog.tags.join(', ') : (blog.tags || '');
+    f.is_public.value = blog.is_public ? '1' : '0';
+    f.publish_date.value = blog.publish_date ? blog.publish_date.slice(0, 16) : '';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('blog-save').textContent = 'Update';
+  }
+
+  async function delBlog(id, source){
+    if (!confirm('Are you sure you want to delete this blog post?')) return;
+    const url = source === 'publicJson' ? `/api/blogs/public/${id}` : `/api/admin/blogs/${id}`;
+    const res = await fetch(url, { method: 'DELETE' });
+    if(res.ok) {
+        loadBlogs();
+    } else {
+        alert('Failed to delete blog post.');
+    }
+  }
+  
+  function resetForm() {
+    blogForm.reset();
+    editor.innerHTML = '<p>Start writing your amazing blog post here...</p>';
+    hiddenContent.value = '';
+    editingId = null;
+    editingSource = 'db';
+    document.getElementById('blog-save').textContent = 'Save';
+  }
+
+  resetBtn.addEventListener('click', resetForm);
+
+  blogForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hiddenContent.value = editor.innerHTML;
+    const formData = new FormData(blogForm);
+    
+    let url, method;
+    if (editingId) {
+        url = editingSource === 'publicJson' ? `/api/blogs/public/${editingId}` : `/api/admin/blogs/${editingId}`;
+        method = 'PUT';
+    } else {
+        url = '/api/admin/blogs';
+        method = 'POST';
+    }
+
+    const res = await fetch(url, { method, body: formData });
+    
+    if (res.ok) {
+        resetForm();
+        loadBlogs();
+    } else {
+        const errorText = await res.text();
+        alert(`Failed to save blog post: ${errorText}`);
+    }
+  });
+
+  // Filter buttons wiring from original
+  document.getElementById('btn-filter-all').addEventListener('click', () => loadBlogs());
+  document.getElementById('btn-filter-public').addEventListener('click', () => loadBlogs('1'));
+  document.getElementById('btn-filter-auth').addEventListener('click', () => loadBlogs('0'));
+
+  feather.replace();
+  loadBlogs();
+});
+</script>
+<!-- add small script to toggle mobile admin menu -->
+<script>
+  (function(){
+    const btn = document.getElementById('admin-menu-button');
+    const menu = document.getElementById('admin-mobile-menu');
+    const backdrop = document.getElementById('admin-mobile-backdrop');
+    const closeBtn = document.getElementById('admin-mobile-close');
+    function show() { menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+    function hide() { menu.classList.remove('show'); document.body.style.overflow=''; }
+    if(btn && menu){
+      btn.addEventListener('click', (e)=>{ e.preventDefault(); show(); });
+    }
+    if(backdrop) backdrop.addEventListener('click', hide);
+    if(closeBtn) closeBtn.addEventListener('click', hide);
+    // Close when any link inside the panel is clicked (improves navigation UX)
+    try {
+      const panel = menu.querySelector('.panel');
+      if(panel){
+        panel.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => setTimeout(hide, 50));
+        });
+      }
+    } catch(e){}
+    // Close on Escape key
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') hide();
+    });
+  })();
+</script>
+</body>
+</html>
+

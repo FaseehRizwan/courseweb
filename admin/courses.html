@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manage Courses | Admin - Aurelius</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;} .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:all .15s;} .sidebar-link:hover{background:#111827;color:#fff;} /* Responsive admin tweaks (same as blogs) */ @media (max-width: 768px) { .editor-toolbar { overflow-x: auto; -webkit-overflow-scrolling: touch; gap:6px; padding:6px; } .editor-btn, .editor-select { width: auto !important; min-width: 36px; height:34px; padding:6px 8px; } } /* Mobile sidebar overlay for admin pages */ #admin-mobile-menu { display: none; position: fixed; inset: 0; z-index: 70; } #admin-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); } #admin-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:360px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; } @media (max-width: 768px) { #admin-mobile-menu.show { display:block; } }</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/admin/dashboard" class="sidebar-link"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/admin/students" class="sidebar-link"><i data-feather="users" class="w-4"></i><span>Students</span></a>
+      <a href="/admin/courses" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/admin/notes" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/admin/blogs" class="sidebar-link"><i data-feather="edit" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4"><button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md"><i data-feather="log-out" class="w-4"></i><span> Logout</span></button></form>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+   <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
+      <div class="flex items-center gap-3">
+        <button id="admin-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold">Manage Courses</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900">View site</a>
+        <form method="post" action="/logout"><button class="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">Logout</button></form>
+      </div>
+    </header>
+
+    <!-- Mobile admin menu (shared structure) -->
+    <div id="admin-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="admin-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="admin-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/admin/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/admin/students" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Students</a></li>
+          <li><a href="/admin/courses" class="block px-3 py-2 rounded bg-gray-800 text-white">Courses</a></li>
+          <li><a href="/admin/notes" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Notes</a></li>
+          <li><a href="/admin/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="flex-1 p-6 md:p-10">
+      <!-- NEW: Tabs -->
+      <div class="mb-6 flex space-x-4">
+        <button id="tab-public" class="tab-btn px-4 py-2 rounded bg-gray-900 text-white text-sm font-semibold">Public Courses</button>
+        <button id="tab-auth" class="tab-btn px-4 py-2 rounded bg-white border text-sm font-semibold">Authorized Courses</button>
+      </div>
+
+      <!-- WRAP existing public courses section -->
+      <div id="public-section">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-1 bg-white rounded-lg shadow p-6">
+            <h2 class="font-semibold mb-3">Add Course</h2>
+            <form id="course-form" class="space-y-3">
+              <input name="title" placeholder="Title" required class="w-full border px-3 py-2 rounded" />
+              <input name="duration" placeholder="Duration" class="w-full border px-3 py-2 rounded" />
+              <input name="imageUrl" placeholder="Image URL" class="w-full border px-3 py-2 rounded" />
+              <textarea name="description" placeholder="Description" class="w-full border px-3 py-2 rounded"></textarea>
+              <div class="flex items-center gap-2">
+                <button id="course-submit-btn" type="submit" class="flex-1 bg-[#c09a59] text-white py-2 rounded">Create</button>
+                <button id="cancel-edit-btn" type="button" class="hidden bg-gray-300 text-gray-800 py-2 px-4 rounded text-sm">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="md:col-span-2 bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-semibold">Existing Courses</h2>
+              <div class="text-sm text-gray-500" id="courses-count">-</div>
+            </div>
+            <div id="courses-list" class="space-y-4 text-sm text-gray-700"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW Authorized Courses Section -->
+      <div id="auth-section" class="hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Create Authorized Course -->
+            <div class="md:col-span-1 bg-white rounded-lg shadow p-6">
+              <h2 class="font-semibold mb-3">Add Authorized Course</h2>
+              <form id="auth-course-form" class="space-y-3">
+                <input name="title" placeholder="Title" required class="w-full border px-3 py-2 rounded" />
+                <input name="imageUrl" placeholder="Thumbnail Image URL" class="w-full border px-3 py-2 rounded" />
+                <textarea name="description" placeholder="Description" required class="w-full border px-3 py-2 rounded"></textarea>
+                <button class="w-full bg-[#c09a59] text-white py-2 rounded" type="submit">Create</button>
+              </form>
+            </div>
+            <!-- List Authorized Courses -->
+            <div class="md:col-span-2 bg-white rounded-lg shadow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="font-semibold">Authorized Courses</h2>
+                <div id="auth-courses-count" class="text-sm text-gray-500">-</div>
+              </div>
+              <div id="auth-courses-list" class="space-y-4 text-sm text-gray-700"></div>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>feather.replace();</script>
+  <script>
+    // escapeHtml: prevent XSS when injecting strings into innerHTML
+    function escapeHtml(s){
+      if (s === undefined || s === null) return '';
+      return String(s).replace(/[&<>"']/g, function(c){
+        return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];
+      });
+    }
+    let publicCoursesCache = [];
+    let editingCourseId = null;
+
+    async function loadCourses(){
+      const listEl = document.getElementById('courses-list');
+      listEl.innerHTML = '<div class="text-center py-6 text-gray-500">Loading...</div>';
+      const res = await fetch('/api/admin/courses');
+      if(!res.ok){ listEl.innerHTML='<div class="text-center py-6 text-red-500">Failed to load courses.</div>'; return; }
+      const courses = await res.json();
+      publicCoursesCache = courses;
+      document.getElementById('courses-count').textContent = courses.length + ' courses';
+      listEl.innerHTML='';
+      courses.forEach(c=>{
+        const wrap = document.createElement('div');
+        wrap.className='border rounded';
+        wrap.innerHTML = `
+          <div class="p-4 flex items-start justify-between hover:bg-gray-50 cursor-pointer" onclick="togglePublicCourse('${c.id}')">
+            <div>
+              <div class="font-semibold">${escapeHtml(c.title)}</div>
+              <div class="text-xs text-gray-500 mt-1">${escapeHtml(c.duration||'')}</div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="text-xs bg-gray-900 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); editCourse('${c.id}')">Edit</button>
+              <button class="text-xs bg-red-600 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); deleteCourse('${c.id}')">Delete</button>
+            </div>
+          </div>
+          <div class="hidden px-4 pb-4 space-y-4" id="public-course-body-${c.id}">
+            <form onsubmit="createPublicLecture(event,'${c.id}')" class="space-y-2 bg-gray-50 p-3 rounded">
+              <div class="font-semibold text-sm">Add Lecture</div>
+              <input name="title" required placeholder="Lecture title" class="w-full border px-2 py-1 rounded text-sm">
+              <input name="duration" placeholder="Duration (e.g. 15:30)" class="w-full border px-2 py-1 rounded text-sm">
+              <textarea name="description" placeholder="Lecture description" class="w-full border px-2 py-1 rounded text-sm"></textarea>
+              <button class="bg-gray-900 text-white text-xs px-3 py-1 rounded">Create Lecture</button>
+            </form>
+            <div class="text-sm font-semibold">Lectures</div>
+            <div class="space-y-3" id="public-lectures-${c.id}">Loading...</div>
+          </div>
+        `;
+        listEl.appendChild(wrap);
+      });
+    }
+
+    // NEW: expand/collapse and load single public course
+    async function togglePublicCourse(id){
+      const body = document.getElementById('public-course-body-'+id);
+      if(body.classList.contains('hidden')){
+        body.classList.remove('hidden');
+        await loadSinglePublicCourse(id);
+      } else {
+        body.classList.add('hidden');
+      }
+    }
+
+    async function loadSinglePublicCourse(id){
+      const container = document.getElementById('public-lectures-'+id);
+      container.innerHTML='Loading...';
+      const res = await fetch('/api/admin/courses/'+id);
+      if(!res.ok){ container.innerHTML='<div class="text-xs text-red-500">Failed.</div>'; return; }
+      const course = await res.json();
+      if(!course.lectures || !course.lectures.length){
+        container.innerHTML='<div class="text-gray-500 text-xs">No lectures yet.</div>';
+        return;
+      }
+      container.innerHTML='';
+      course.lectures.forEach(l=>{
+        const div = document.createElement('div');
+        div.className='border rounded p-3';
+        const supportList = (l.videos||[]).map(v=>`
+          <li class="flex items-center justify-between">
+            <a class="text-blue-600 underline break-all" target="_blank" href="${v.url}">${escapeHtml(v.name||'Video')}</a>
+            <button class="ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deletePublicVideo('${course.id}','${l.id}','${v.id}')">x</button>
+          </li>`).join('');
+        const resources = (l.resources||[]).map(r=>`
+          <li class="flex items-center justify-between">
+            <a class="text-blue-600 underline break-all" target="_blank" href="${r.url}">${escapeHtml(r.name||'Resource')} (${escapeHtml(r.type||'')})</a>
+            <button class="ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deletePublicResource('${course.id}','${l.id}','${r.id}')">x</button>
+          </li>`).join('');
+        div.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="font-semibold text-sm">${escapeHtml(l.title)}</div>
+              <div class="text-[11px] text-gray-500 mt-0.5">${escapeHtml(l.duration||'')}</div>
+            </div>
+            <div class="space-x-2">
+              <button class="text-[10px] bg-gray-900 text-white px-2 py-0.5 rounded" onclick="startEditLecture('${course.id}','${l.id}')">Edit</button>
+              <button class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deletePublicLecture('${course.id}','${l.id}')">Del</button>
+            </div>
+          </div>
+          <div class="text-xs text-gray-600 mt-2 whitespace-pre-line">${escapeHtml(l.description||'')}</div>
+          <div class="mt-3">
+            <div class="text-xs font-medium mb-1">Videos</div>
+            <ul class="space-y-1 text-xs">${supportList || '<li class="text-gray-400 italic">None</li>'}</ul>
+          </div>
+          <div class="mt-3">
+            <div class="text-xs font-medium mb-1">Resources</div>
+            <ul class="space-y-1 text-xs">${resources || '<li class="text-gray-400 italic">None</li>'}</ul>
+          </div>
+          <form class="mt-3 space-y-2 bg-gray-50 p-2 rounded text-xs" onsubmit="uploadPublicMedia(event,'${course.id}','${l.id}')" enctype="multipart/form-data">
+            <div class="font-semibold text-[11px]">Upload Media</div>
+            <select name="mediaRole" class="w-full border px-2 py-1 rounded text-[11px]" required>
+              <option value="main">Main Video</option>
+              <option value="support">Supporting Video</option>
+              <option value="resource" selected>Resource File / Other</option>
+            </select>
+            <input type="file" name="media" multiple class="w-full text-[11px]">
+            <button class="bg-gray-900 text-white px-2 py-1 rounded text-[11px]">Upload</button>
+          </form>
+          <form class="hidden mt-3 space-y-2 bg-gray-50 p-2 rounded text-xs" id="edit-lecture-form-${l.id}" onsubmit="submitEditLecture(event,'${course.id}','${l.id}')">
+            <div class="font-semibold text-[11px]">Edit Lecture</div>
+            <input name="title" value="${escapeHtml(l.title)}" required class="w-full border px-2 py-1 rounded text-[11px]">
+            <input name="duration" value="${escapeHtml(l.duration||'')}" class="w-full border px-2 py-1 rounded text-[11px]" placeholder="Duration">
+            <textarea name="description" class="w-full border px-2 py-1 rounded text-[11px]">${escapeHtml(l.description||'')}</textarea>
+            <div class="flex gap-2">
+              <button class="bg-gray-900 text-white px-2 py-1 rounded text-[11px]">Save</button>
+              <button type="button" onclick="cancelEditLecture('${l.id}')" class="bg-gray-300 text-gray-800 px-2 py-1 rounded text-[11px]">Cancel</button>
+            </div>
+          </form>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function createPublicLecture(e, courseId){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      fetch(`/api/admin/courses/${courseId}/lectures`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      }).then(r=>{
+        if(r.ok){ e.target.reset(); loadSinglePublicCourse(courseId); } else alert('Failed to add lecture');
+      });
+    }
+
+    function deletePublicLecture(courseId, lectureId){
+      if(!confirm('Delete lecture?')) return;
+      fetch(`/api/admin/courses/${courseId}/lectures/${lectureId}`, { method:'DELETE' })
+        .then(r=>{ if(r.ok) loadSinglePublicCourse(courseId); else alert('Failed'); });
+    }
+
+    function uploadPublicMedia(e, courseId, lectureId){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      fetch(`/api/admin/courses/${courseId}/lectures/${lectureId}/media`, { method:'POST', body: fd })
+        .then(r=>{ if(r.ok){ e.target.reset(); loadSinglePublicCourse(courseId);} else alert('Upload failed'); });
+    }
+
+    function deletePublicVideo(courseId, lectureId, mediaId){
+      if(!confirm('Delete video?')) return;
+      fetch(`/api/admin/courses/${courseId}/lectures/${lectureId}/videos/${mediaId}`, { method:'DELETE' })
+        .then(r=>{ if(r.ok) loadSinglePublicCourse(courseId); else alert('Failed'); });
+    }
+
+    function deletePublicResource(courseId, lectureId, resId){
+      if(!confirm('Delete resource?')) return;
+      fetch(`/api/admin/courses/${courseId}/lectures/${lectureId}/resources/${resId}`, { method:'DELETE' })
+        .then(r=>{ if(r.ok) loadSinglePublicCourse(courseId); else alert('Failed'); });
+    }
+
+    function startEditLecture(courseId, lectureId){
+      const form = document.getElementById('edit-lecture-form-'+lectureId);
+      if(form) form.classList.remove('hidden');
+    }
+    function cancelEditLecture(lectureId){
+      const form = document.getElementById('edit-lecture-form-'+lectureId);
+      if(form) form.classList.add('hidden');
+    }
+    function submitEditLecture(e, courseId, lectureId){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      fetch(`/api/admin/courses/${courseId}/lectures/${lectureId}`, {
+        method:'PUT',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      }).then(r=>{
+        if(r.ok){ cancelEditLecture(lectureId); loadSinglePublicCourse(courseId); }
+        else alert('Update failed');
+      });
+    }
+
+    // --- Public course create / edit / delete handlers ---
+document.getElementById('course-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const body = Object.fromEntries(fd.entries());
+  try {
+    if (editingCourseId) {
+      // Update existing
+      const res = await fetch('/api/admin/courses/' + editingCourseId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('update_failed');
+      editingCourseId = null;
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+      document.getElementById('course-submit-btn').textContent = 'Create';
+    } else {
+      // Create new
+      const res = await fetch('/api/admin/courses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('create_failed');
+    }
+    e.target.reset();
+    await loadCourses();
+  } catch (err) {
+    console.error(err);
+    alert('Failed to save course');
+  }
+});
+
+function editCourse(id){
+  const course = publicCoursesCache.find(c => String(c.id) === String(id));
+  if(!course) return alert('Course not found');
+  const form = document.getElementById('course-form');
+  form.title.value = course.title || '';
+  form.duration.value = course.duration || '';
+  form.imageUrl.value = course.imageUrl || '';
+  form.description.value = course.description || '';
+  editingCourseId = id;
+  document.getElementById('cancel-edit-btn').classList.remove('hidden');
+  document.getElementById('course-submit-btn').textContent = 'Save';
+  form.scrollIntoView({ behavior: 'smooth' });
+}
+
+document.getElementById('cancel-edit-btn').addEventListener('click', ()=>{
+  const form = document.getElementById('course-form');
+  form.reset();
+  editingCourseId = null;
+  document.getElementById('cancel-edit-btn').classList.add('hidden');
+  document.getElementById('course-submit-btn').textContent = 'Create';
+});
+
+async function deleteCourse(id){
+  if(!confirm('Delete this course and its lectures?')) return;
+  try{
+    const res = await fetch('/api/admin/courses/' + id, { method: 'DELETE' });
+    if(!res.ok) throw new Error('delete_failed');
+    await loadCourses();
+  }catch(e){
+    console.error(e);
+    alert('Failed to delete course');
+  }
+}
+
+    // ---------- Tabs ----------
+    const tabPublic = document.getElementById('tab-public');
+    const tabAuth = document.getElementById('tab-auth');
+    const publicSection = document.getElementById('public-section');
+    const authSection = document.getElementById('auth-section');
+
+    function setTab(active){
+      if(active==='public'){
+        publicSection.classList.remove('hidden');
+        authSection.classList.add('hidden');
+        tabPublic.classList.add('bg-gray-900','text-white');
+        tabAuth.classList.remove('bg-gray-900','text-white');
+        tabAuth.classList.add('bg-white','border');
+        tabPublic.classList.remove('bg-white','border');
+      } else {
+        authSection.classList.remove('hidden');
+        publicSection.classList.add('hidden');
+        tabAuth.classList.add('bg-gray-900','text-white');
+        tabPublic.classList.remove('bg-gray-900','text-white');
+        tabPublic.classList.add('bg-white','border');
+        tabAuth.classList.remove('bg-white','border');
+        // lazy load
+        loadAuthCourses();
+      }
+    }
+    tabPublic.addEventListener('click', ()=>setTab('public'));
+    tabAuth.addEventListener('click', ()=>setTab('auth'));
+
+    // ---------- Authorized Courses Logic ----------
+    const authListEl = document.getElementById('auth-courses-list');
+
+    document.getElementById('auth-course-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      const res = await fetch('/api/admin/auth-courses', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if(res.ok){
+        e.target.reset();
+        loadAuthCourses();
+      } else {
+        alert('Failed to add authorized course');
+      }
+    });
+
+    async function loadAuthCourses(){
+      authListEl.innerHTML = '<div class="text-center py-6 text-gray-500">Loading...</div>';
+      const res = await fetch('/api/admin/auth-courses');
+      if(!res.ok){ authListEl.innerHTML='<div class="text-center py-6 text-red-500">Failed.</div>'; return; }
+      const courses = await res.json();
+      document.getElementById('auth-courses-count').textContent = courses.length + ' courses';
+      if(!courses.length){ authListEl.innerHTML='<div class="text-gray-500">No authorized courses yet.</div>'; return; }
+      authListEl.innerHTML='';
+      courses.forEach(c=>{
+        const wrap = document.createElement('div');
+        wrap.className='border rounded';
+        wrap.innerHTML = `
+          <div class="p-4 flex items-start justify-between cursor-pointer hover:bg-gray-50" onclick="toggleAuthCourse('${c.id}', this)">
+            <div>
+              <div class="font-semibold">${escapeHtml(c.title)}</div>
+              <div class="text-xs text-gray-500 mt-1">${c.lectures} lectures</div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="text-xs bg-gray-700 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); startEditAuthCourse('${c.id}')">Edit</button>
+              <button class="text-xs bg-red-600 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); deleteAuthCourse('${c.id}')">Delete</button>
+            </div>
+          </div>
+          <div class="hidden px-4 pb-4 space-y-4" id="auth-course-body-${c.id}">
+            <!-- Edit form (hidden) -->
+            <form id="auth-edit-form-${c.id}" class="hidden space-y-3 bg-gray-50 p-3 rounded" onsubmit="submitEditAuthCourse(event,'${c.id}')">
+              <div class="font-semibold text-sm">Edit Authorized Course</div>
+              <input name="title" placeholder="Title" value="${escapeHtml(c.title)}" class="w-full border px-3 py-2 rounded" required />
+              <input name="imageUrl" placeholder="Thumbnail Image URL" value="${escapeHtml(c.image_url||'')}" class="w-full border px-3 py-2 rounded" />
+              <textarea name="description" placeholder="Description" class="w-full border px-3 py-2 rounded">${escapeHtml(c.description||'')}</textarea>
+              <div class="flex gap-2">
+                <button class="bg-[#c09a59] text-white px-3 py-1 rounded text-sm">Save</button>
+                <button type="button" class="bg-gray-300 text-gray-800 px-3 py-1 rounded text-sm" onclick="cancelEditAuthCourse('${c.id}')">Cancel</button>
+              </div>
+            </form>
+            <form onsubmit="createLecture(event,'${c.id}')" class="space-y-2 bg-gray-50 p-3 rounded">
+              <div class="font-semibold text-sm">Add Lecture</div>
+              <input name="title" required placeholder="Lecture title" class="w-full border px-2 py-1 rounded text-sm">
+              <textarea name="description" placeholder="Lecture description" class="w-full border px-2 py-1 rounded text-sm"></textarea>
+              <button class="bg-gray-900 text-white text-xs px-3 py-1 rounded">Create Lecture</button>
+            </form>
+            <div class="text-sm font-semibold">Lectures</div>
+            <div class="space-y-3" id="lectures-${c.id}">Loading...</div>
+          </div>
+        `;
+        authListEl.appendChild(wrap);
+      });
+    }
+
+    async function toggleAuthCourse(id, headerEl){
+      const body = document.getElementById('auth-course-body-'+id);
+      if(body.classList.contains('hidden')){
+        body.classList.remove('hidden');
+        await loadSingleAuthCourse(id);
+      } else {
+        body.classList.add('hidden');
+      }
+    }
+
+    async function loadSingleAuthCourse(id){
+      const lecturesWrap = document.getElementById('lectures-'+id);
+      lecturesWrap.innerHTML = 'Loading...';
+      const res = await fetch('/api/admin/auth-courses/'+id);
+      if(!res.ok){ lecturesWrap.innerHTML = '<div class="text-red-500 text-xs">Failed to load.</div>'; return; }
+      const course = await res.json();
+      if(!course.lectures.length){ lecturesWrap.innerHTML='<div class="text-gray-500 text-xs">No lectures yet.</div>'; return; }
+      lecturesWrap.innerHTML='';
+      course.lectures.forEach(l=>{
+        const div = document.createElement('div');
+        div.className='border rounded p-3';
+        const supportList = (l.support||[]).map(v=>`
+          <li class="flex items-center justify-between">
+            <a href="${v.url}" target="_blank" class="text-blue-600 underline break-all text-xs">${escapeHtml(v.name||'Video')}</a>
+            <button class="ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deleteAuthMedia('${v.id}','${id}')">x</button>
+          </li>`).join('');
+        const resources = (l.resources||[]).map(r=>`
+          <li class="flex items-center justify-between">
+            <a href="${r.url}" target="_blank" class="text-blue-600 underline break-all text-xs">${escapeHtml(r.name||r.url)}</a>
+            <span class="text-[10px] ml-2 bg-gray-200 px-1 rounded">${r.type||r.role||''}</span>
+            <button class="ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deleteAuthMedia('${r.id}','${id}')">x</button>
+          </li>`).join('');
+        div.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="font-semibold text-sm">${escapeHtml(l.title)}</div>
+              <div class="text-[11px] text-gray-500 mt-0.5">${escapeHtml(l.duration||'')}</div>
+            </div>
+            <div class="space-x-2">
+              <button class="text-[10px] bg-gray-900 text-white px-2 py-0.5 rounded" onclick="startEditAuthLecture('${l.id}')">Edit</button>
+              <button class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deleteAuthLecture('${l.id}','${id}')">Del</button>
+            </div>
+          </div>
+          <div class="text-xs text-gray-600 mt-2 whitespace-pre-line">${escapeHtml(l.description||'')}</div>
+
+          <div class="mt-3 text-xs">
+            <div class="font-medium mb-1">Main Video</div>
+            ${l.main ? `
+              <div class="flex items-center justify-between">
+                <a href="${l.main.url}" target="_blank" class="text-blue-600 underline break-all">${escapeHtml(l.main.name||'Main Video')}</a>
+                <button class="ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded" onclick="deleteAuthMedia('${l.main.id}','${id}')">x</button>
+              </div>` : '<div class="text-gray-400 italic">None</div>'}
+          </div>
+
+          <div class="mt-3">
+            <div class="text-xs font-medium mb-1">Supporting Videos</div>
+            <ul class="space-y-1 text-xs">${supportList || '<li class="text-gray-400 italic">None</li>'}</ul>
+          </div>
+
+          <div class="mt-3">
+            <div class="text-xs font-medium mb-1">Resources</div>
+            <ul class="space-y-1 text-xs">${resources || '<li class="text-gray-400 italic">None</li>'}</ul>
+          </div>
+
+          <form onsubmit="uploadMedia(event, '${l.id}', '${id}')" class="mt-3 space-y-2 bg-gray-50 p-2 rounded text-xs" enctype="multipart/form-data">
+            <div class="font-semibold text-[11px]">Upload Media</div>
+            <select name="mediaRole" class="w-full border px-2 py-1 rounded text-[11px]" required>
+              <option value="main">Main Video</option>
+              <option value="support">Supporting Video</option>
+              <option value="resource" selected>Resource (File/Other)</option>
+            </select>
+            <input type="file" name="videos" multiple accept="video/*" class="w-full text-[11px]">
+            <input type="file" name="files" multiple class="w-full text-[11px]">
+            <button class="bg-gray-900 text-white px-2 py-1 rounded text-[11px]">Upload</button>
+          </form>
+
+          <form id="edit-auth-lecture-${l.id}" class="hidden mt-3 space-y-2 bg-gray-50 p-2 rounded text-xs" onsubmit="submitEditAuthLecture(event,'${l.id}','${id}')">
+            <div class="font-semibold text-[11px]">Edit Lecture</div>
+            <input name="title" value="${escapeHtml(l.title)}" required class="w-full border px-2 py-1 rounded text-[11px]">
+            <input name="duration" value="${escapeHtml(l.duration||'')}" placeholder="Duration" class="w-full border px-2 py-1 rounded text-[11px]">
+            <textarea name="description" class="w-full border px-2 py-1 rounded text-[11px]">${escapeHtml(l.description||'')}</textarea>
+            <div class="flex gap-2">
+              <button class="bg-gray-900 text-white px-2 py-1 rounded text-[11px]">Save</button>
+              <button type="button" onclick="cancelEditAuthLecture('${l.id}')" class="bg-gray-300 text-gray-800 px-2 py-1 rounded text-[11px]">Cancel</button>
+            </div>
+          </form>
+        `;
+        lecturesWrap.appendChild(div);
+      });
+    }
+
+    async function createLecture(e, courseId){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      const res = await fetch(`/api/admin/auth-courses/${courseId}/lectures`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if(res.ok){
+        e.target.reset();
+        loadSingleAuthCourse(courseId);
+      } else {
+        alert('Failed to add lecture');
+      }
+    }
+
+    async function uploadMedia(e, lectureId, courseId){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const res = await fetch(`/api/admin/auth-lectures/${lectureId}/media`, { method:'POST', body: fd });
+      if(res.ok){
+        e.target.reset();
+        loadSingleAuthCourse(courseId);
+      } else {
+        alert('Failed to upload media');
+      }
+    }
+
+    async function deleteAuthCourse(id){
+      if(!confirm('Delete this authorized course (and its lectures/media)?')) return;
+      const res = await fetch('/api/admin/auth-courses/'+id, { method:'DELETE' });
+      if(res.ok) loadAuthCourses(); else alert('Failed');
+    }
+
+    // ---------- Default tab and load courses ----------
+    setTab('public');
+    loadCourses();
+  </script>
+  <!-- small toggle script (same behavior as blogs page) -->
+  <script>
+    (function(){
+      const btn = document.getElementById('admin-menu-button');
+      const menu = document.getElementById('admin-mobile-menu');
+      const backdrop = document.getElementById('admin-mobile-backdrop');
+      const closeBtn = document.getElementById('admin-mobile-close');
+      function show() { menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide() { menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu){
+        btn.addEventListener('click', (e)=>{ e.preventDefault(); show(); });
+      }
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      // Close when any link inside the panel is clicked
+      try {
+        const panel = menu.querySelector('.panel');
+        if(panel){
+          panel.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => setTimeout(hide, 50));
+          });
+        }
+      } catch(e){}
+      // Close on Escape key
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') hide();
+      });
+    })();
+  </script>
+</body>
+</html>

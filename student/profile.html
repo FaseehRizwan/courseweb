@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile | Student - Aurelius</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    /* student mobile sidebar overlay */
+    #student-mobile-menu { display:none; position:fixed; inset:0; z-index:60; }
+    #student-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+    #student-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:320px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+    @media (max-width: 768px) { #student-mobile-menu.show { display:block; } }
+    body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;} .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:all .15s;} .sidebar-link:hover{background:#111827;color:#fff;}
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/student/dashboard" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/student/profile" class="sidebar-link"><i data-feather="user" class="w-4"></i><span>Profile</span></a>
+      <a href="/student/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/student/notes" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/student/blogs" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4"><button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md">Logout</button></form>
+  </aside>
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
+      <div class="flex items-center gap-3">
+        <button id="student-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold">My Profile</h1>
+      </div>
+      <div class="flex items-center space-x-4"><a href="/student/dashboard" class="text-sm text-gray-600 hover:text-gray-900">Back</a></div>
+    </header>
+
+    <!-- Student mobile menu -->
+    <div id="student-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="student-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="student-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/student/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/student/profile" class="block px-3 py-2 rounded bg-gray-800 text-white">Profile</a></li>
+          <li><a href="/student/courses" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Courses</a></li>
+          <li><a href="/student/notes" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Notes</a></li>
+          <li><a href="/student/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="flex-1 p-6 md:p-10">
+      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-1 bg-white rounded-lg shadow p-6">
+          <h2 class="font-semibold mb-2">Account</h2>
+          <p class="text-sm text-gray-600" id="username">-</p>
+          <p class="text-sm text-gray-600" id="email">-</p>
+        </div>
+        <div class="md:col-span-2 bg-white rounded-lg shadow p-6">
+          <h2 class="font-semibold mb-4">Personal Details</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div><strong>Full Name</strong><div id="full_name">-</div></div>
+            <div><strong>Father Name</strong><div id="father_name">-</div></div>
+            <div><strong>CNIC</strong><div id="cnic">-</div></div>
+            <div><strong>Phone</strong><div id="phone">-</div></div>
+            <div><strong>City</strong><div id="city">-</div></div>
+          </div>
+          <h3 class="mt-6 font-semibold">Results</h3>
+          <div id="results" class="mt-2 text-sm text-gray-700">
+            <p>No results available yet.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>feather.replace();</script>
+  <script>
+    (function(){
+      const btn = document.getElementById('student-menu-button');
+      const menu = document.getElementById('student-mobile-menu');
+      const backdrop = document.getElementById('student-mobile-backdrop');
+      const closeBtn = document.getElementById('student-mobile-close');
+      function show(){ menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu) btn.addEventListener('click', e=>{ e.preventDefault(); show(); });
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      try{ const panel = menu.querySelector('.panel'); if(panel) panel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>setTimeout(hide,50))); }catch(e){}
+      document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') hide(); });
+    })();
+  </script>
+  <script>
+    fetch('/api/student/me').then(r=>r.json()).then(data=>{
+      if(!data) return;
+      document.getElementById('username').textContent = data.username;
+      document.getElementById('email').textContent = data.email;
+      document.getElementById('full_name').textContent = data.full_name;
+      document.getElementById('father_name').textContent = data.father_name;
+      document.getElementById('cnic').textContent = data.cnic;
+      document.getElementById('phone').textContent = data.phone;
+      document.getElementById('city').textContent = data.city;
+    }).catch(()=>{});
+  </script>
+</body>
+</html>

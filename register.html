@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration | Aurelius University</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 flex flex-col">
+  <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center space-x-2 font-bold tracking-wider text-white"><i data-feather="shield"></i><span>AURELIUS</span></a>
+      <nav class="hidden md:flex items-center space-x-8 text-sm">
+        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">Home</a>
+        <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">About</a>
+        <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">Courses</a>
+        <a href="/blog" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">Blog</a>
+        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">Gallery</a>
+        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300">Contact</a>
+        <!-- Login action (replaces Apply button on other pages) -->
+        <a href="/login" class="bg-[#c09a59] text-white px-4 py-2 rounded-md hover:bg-[#b38e52] transition">Login</a>
+      </nav>
+      <button class="md:hidden text-white" id="menu-button"><i data-feather="menu"></i></button>
+    </div>
+    <!-- Mobile menu (same links, show Login) -->
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+      <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+      <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+      <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+      <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+      <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+      <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+      <a href="/login" class="block bg-[#c09a59] text-white text-center py-4 hover:bg-[#b38e52]">Login</a>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <section class="py-16 bg-gradient-to-b from-gray-100 to-white">
+      <div class="max-w-4xl mx-auto bg-white/90 backdrop-blur rounded-xl shadow-xl p-8 border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 text-center">Create Your Account</h1>
+        <p class="text-sm text-gray-500 mb-8 text-center">Student registration form</p>
+        <form method="POST" action="/register" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input name="username" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input name="full_name" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Father Name</label>
+            <input name="father_name" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">CNIC / B-Form No.</label>
+            <input name="cnic" placeholder="12345-1234567-1" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" name="email" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input name="phone" placeholder="03XX-XXXXXXX" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">City (Pakistan)</label>
+            <select name="city" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]">
+              <option value="">Select City</option>
+              <option>Karachi</option>
+              <option>Lahore</option>
+              <option>Islamabad</option>
+              <option>Rawalpindi</option>
+              <option>Faisalabad</option>
+              <option>Multan</option>
+              <option>Hyderabad</option>
+              <option>Peshawar</option>
+              <option>Quetta</option>
+              <option>Sialkot</option>
+              <option>Gujranwala</option>
+              <option>Bahawalpur</option>
+              <option>Sukkur</option>
+              <option>Abbottabad</option>
+              <option>Mardan</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" name="password" minlength="6" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <input type="password" name="confirm_password" minlength="6" required class="w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-[#c09a59] focus:border-[#c09a59]" />
+          </div>
+          <div class="md:col-span-2 pt-2">
+            <button type="submit" class="w-full bg-[#c09a59] text-white font-semibold py-4 rounded-md hover:bg-[#b38e52] transition">Create Account</button>
+          </div>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-600">Already registered? <a href="/login" class="text-[#c09a59] font-medium hover:underline">Login</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 text-sm py-6 text-center">&copy; 2025 Aurelius University</footer>
+  <!-- ensure shared header/menu/animations script is included so header behaves like other pages -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

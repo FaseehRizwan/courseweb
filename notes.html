@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Notes | Aurelius University</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+  body{font-family: 'Roboto',sans-serif;background:#f8f9fa;}
+  h1,h2,h3,h4{font-family:'Playfair Display',serif;}
+  .page-header-bg{background-image:linear-gradient(rgba(10,20,39,0.75),rgba(10,20,39,0.75)), url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=2070&auto=format&fit=crop'); background-size:cover; background-position:center;}
+  .section-title-underline{position:relative;display:inline-block;padding-bottom:.5rem;}
+  .section-title-underline::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;height:3px;background:#c09a59;}
+  .animate-on-scroll{opacity:0;transform:translateY(30px);transition:all .6s ease-out;}
+  .animate-on-scroll.is-visible{opacity:1;transform:none;}
+  /* Header styles copied from index.html for consistent header appearance */
+  .animate-on-scroll { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+  .header-scrolled { background-color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .header-scrolled a, .header-scrolled button, .header-scrolled span { color: #1a202c !important; }
+  .header-scrolled .apply-btn { background-color: #c09a59; color: white !important; }
+  .header-scrolled .apply-btn:hover { background-color: #b38e52; }
+  .nav-link-underline { position: relative; }
+  .nav-link-underline::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 50%; transform: translateX(-50%); background-color: #c09a59; transition: width 0.3s ease-in-out; }
+  .nav-link-underline:hover::after, .nav-link-underline.active::after { width: 100%; }
+</style>
+</head>
+<body class="antialiased text-gray-800">
+
+  <div class="max-w-screen-2xl mx-auto bg-white">
+    <!-- Header replaced with same markup as index.html for identical design/behavior -->
+    <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20 transition-all duration-300">
+          <!-- Logo -->
+          <div class="flex-shrink-0">
+            <a href="/" class="flex items-center space-x-2 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+            </a>
+          </div>
+          <!-- Navigation -->
+          <nav class="hidden md:flex items-center space-x-10">
+            <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+            <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+            <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+            <a href="/notes" class="nav-link-underline active text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+            <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+            <a href="/blog" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+            <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+            <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+            <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+          </nav>
+          <!-- Actions -->
+          <div class="flex items-center space-x-4">
+            <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+            <button class="md:hidden text-white" id="menu-button">
+              <i data-feather="menu"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+        <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+        <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+        <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+        <a href="/notes" class="block text-white text-center py-4 bg-gray-800 font-bold">Notes</a>
+        <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+        <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+        <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+      </div>
+    </header>
+
+    <main class="pt-20">
+      <!-- Page header -->
+      <section class="relative page-header-bg overflow-hidden">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 text-white text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold animate-on-scroll">Public Notes</h1>
+          <p class="mt-4 text-lg text-gray-200 max-w-2xl mx-auto animate-on-scroll" style="transition-delay:.15s;">Browse and download public lecture notes and resources shared by Aurelius faculty and staff.</p>
+        </div>
+      </section>
+
+      <!-- Notes grid -->
+      <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-10">
+            <h2 class="text-3xl font-extrabold section-title-underline">Available Notes</h2>
+          </div>
+          <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+          <div id="notes-empty" class="hidden text-center text-gray-500 mt-12">No public notes available.</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (consistent with other pages) -->
+    <footer class="bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="md:col-span-2">
+            <h3 class="text-xl font-semibold tracking-wider">AURELIUS UNIVERSITY</h3>
+            <p class="mt-4 text-gray-400">Illuminating minds and shaping the future since 1901.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-300">EXPLORE</h4>
+            <ul class="mt-4 space-y-2">
+              <li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
+              <li><a href="/apply" class="text-gray-400 hover:text-white">Admissions</a></li>
+              <li><a href="/blog" class="text-gray-400 hover:text-white">News</a></li>
+              <li><a href="/contact" class="text-gray-400 hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-300">CONNECT</h4>
+            <div class="flex items-center space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white"><i data-feather="instagram"></i></a>
+              <a href="#" class="text-gray-400 hover:text-white"><i data-feather="facebook"></i></a>
+              <a href="#" class="text-gray-400 hover:text-white"><i data-feather="twitter"></i></a>
+              <a href="#" class="text-gray-400 hover:text-white"><i data-feather="linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-12 border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 text-sm">&copy; 2025 Aurelius University. All Rights Reserved.</p>
+          <a href="#" class="text-gray-500 hover:text-white text-sm mt-4 md:mt-0">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // page-specific: fetch public notes and render cards consistent with other public pages
+    document.addEventListener('DOMContentLoaded', async () => {
+      const grid = document.getElementById('notes-grid');
+      const empty = document.getElementById('notes-empty');
+      try {
+        const res = await fetch('/api/notes/public');
+        if (!res.ok) throw new Error('fetch_failed');
+        const notes = await res.json();
+        if (!notes || notes.length === 0) {
+          empty.classList.remove('hidden');
+          return;
+        }
+        empty.classList.add('hidden');
+        notes.forEach((n, idx) => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-lg shadow-md overflow-hidden animate-on-scroll';
+          card.style.transitionDelay = `${(idx % 6) * 0.05}s`;
+          const safeUrl = n.file_url ? n.file_url : '#';
+          const created = n.created_at ? (String(n.created_at).split(' ').shift()) : '';
+          card.innerHTML = `
+            <div class="p-6 flex flex-col h-full">
+              <div class="flex items-start justify-between">
+                <div class="text-sm text-[#c09a59] font-semibold">RESOURCE</div>
+                <div class="text-xs text-gray-400">${n.category_name || ''}</div>
+              </div>
+              <h3 class="mt-3 text-xl font-bold text-gray-900">${escapeHtml(n.title)}</h3>
+              <p class="mt-2 text-sm text-gray-600 flex-grow">${escapeHtml(n.description || '')}</p>
+              <div class="mt-4 flex items-center justify-between">
+                <div class="text-xs text-gray-500">${created}</div>
+                <a href="${safeUrl}" ${safeUrl !== '#' ? 'target="_blank"' : ''} class="bg-[#c09a59] text-white text-xs px-4 py-2 rounded hover:bg-[#b38e52]">${safeUrl !== '#' ? 'Download' : 'No File'}</a>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+          // register with shared observer if available, otherwise create a brief fallback observer
+          if (window.__mainObserver && typeof window.__mainObserver.observe === 'function') {
+            window.__mainObserver.observe(card);
+          } else {
+            const fallback = new IntersectionObserver((entries) => {
+              entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-visible'); fallback.unobserve(en.target); }});
+            }, { threshold: 0.1 });
+            fallback.observe(card);
+          }
+        });
+      } catch (e) {
+        grid.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 text-sm">Failed to load notes.</div>';
+        console.error(e);
+      }
+    });
+
+    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  </script>
+</body>
+</html>

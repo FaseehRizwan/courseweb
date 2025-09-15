@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Aurelius University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa; 
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .page-header-bg {
+            background-image: linear-gradient(rgba(10, 20, 39, 0.85), rgba(10, 20, 39, 0.85)), url('https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1973&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .header-scrolled {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-scrolled a, .header-scrolled button, .header-scrolled span {
+            color: #1a202c !important; /* text-gray-900 */
+        }
+        .header-scrolled .apply-btn {
+             background-color: #c09a59; /* Custom Gold */
+             color: white !important;
+        }
+        .header-scrolled .apply-btn:hover {
+            background-color: #b38e52;
+        }
+        .nav-link-underline {
+            position: relative;
+        }
+        .nav-link-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #c09a59;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link-underline:hover::after, .nav-link-underline.active::after {
+            width: 100%;
+        }
+
+        .section-title-underline {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #c09a59;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-screen-2xl mx-auto bg-white">
+        <!-- Header -->
+        <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 transition-all duration-300">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center space-x-2 text-white">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-10">
+                        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+                        <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+                        <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+                        <a href="/notes" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+                        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+                        <a href="/blog" class="nav-link-underline active text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+                        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+                        <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+                        <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+                        
+                    </nav>
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+                         <button class="md:hidden text-white" id="menu-button">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+             <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+                <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+                <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+                <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+                <a href="/notes" class="block text-white text-center py-4 hover:bg-gray-800">Notes</a>
+                <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+                <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+                <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+                <a href="/login" class="block text-white text-center py-4 hover:bg-gray-800">Login</a>
+                <a href="/register" class="block text-white text-center py-4 hover:bg-gray-800">Register</a>
+                <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+            </div>
+        </header>
+
+
+        <main>
+            <!-- Page Header -->
+            <section class="relative page-header-bg overflow-hidden">
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 pb-32 text-white text-center">
+                    <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight animate-on-scroll">University Blog</h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-300 animate-on-scroll" style="transition-delay: 0.2s;">
+                        Latest news, stories, and insights from the Aurelius community.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Blog List Section -->
+            <section class="py-24 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 section-title-underline">Latest Articles</h2>
+                    </div>
+                    <div id="blog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <!-- Blog posts will be injected here by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white">
+             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <!-- About -->
+                    <div class="col-span-1 md:col-span-2">
+                         <h3 class="text-xl font-semibold tracking-wider">AURELIUS UNIVERSITY</h3>
+                         <p class="mt-4 text-gray-400">Illuminating minds and shaping the future since 1901.</p>
+                    </div>
+                     <!-- Links -->
+                    <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">EXPLORE</h4>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="/about" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                            <li><a href="/apply" class="text-gray-400 hover:text-white transition-colors">Admissions</a></li>
+                            <li><a href="/blog" class="text-gray-400 hover:text-white transition-colors">News & Events</a></li>
+                            <li><a href="/contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Social -->
+                     <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">CONNECT</h4>
+                        <div class="flex items-center space-x-4 mt-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-16 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm">&copy; 2025 Aurelius University. All Rights Reserved.</p>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm mt-4 md:mt-0">Privacy Policy</a>
+                </div>
+             </div>
+        </footer>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // minimal helper to escape strings inserted into innerHTML
+        function escapeHtml(s){ if(s===undefined||s===null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const blogContainer = document.getElementById('blog-container');
+            blogContainer.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">Loading posts...</div>';
+
+            fetch('/api/blogs/public')
+                .then(r => { if(!r.ok) throw new Error('fetch_failed'); return r.json(); })
+                .then(posts => {
+                    blogContainer.innerHTML = '';
+                    posts = Array.isArray(posts) ? posts : [];
+                    if (!posts.length) {
+                        blogContainer.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">No blog posts available.</div>';
+                        return;
+                    }
+                    // sort by created_at if available, otherwise by id (numeric or string)
+                    posts.sort((a,b)=>{
+                      const da = Date.parse(a.created_at||'') || (typeof a.id === 'number' ? a.id : 0);
+                      const db = Date.parse(b.created_at||'') || (typeof b.id === 'number' ? b.id : 0);
+                      return db - da;
+                    });
+                    posts.forEach((post, index) => {
+                        const img = post.image_url || post.imageUrl || 'https://placehold.co/800x450';
+                        const title = escapeHtml(post.title || 'Untitled');
+                        const excerpt = escapeHtml(post.excerpt || (post.content||'').slice(0,250));
+                        const author = escapeHtml(post.author || 'Staff');
+                        const dateStr = escapeHtml(post.created_at || post.date || '');
+                        const id = encodeURIComponent(post.id);
+
+                        const el = document.createElement('div');
+                        el.className = 'animate-on-scroll bg-white rounded-lg shadow-lg overflow-hidden flex flex-col';
+                        el.style.transitionDelay = `${index * 0.06}s`;
+                        el.innerHTML = `
+                          <img src="${img}" alt="${title}" class="w-full h-56 object-cover">
+                          <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">${title}</h3>
+                            <div class="text-sm text-gray-500 mb-4"><span>By ${author}</span>${ dateStr ? ' | <span>' + dateStr + '</span>' : '' }</div>
+                            <p class="text-gray-600 flex-grow">${excerpt}</p>
+                            <a href="/blog-detail?id=${id}" class="mt-6 text-[#c09a59] font-bold hover:text-[#a07e49] self-start">Read More &rarr;</a>
+                          </div>`;
+                        blogContainer.appendChild(el);
+                    });
+                    // reveal animate-on-scroll elements (main.js observer will catch many, but ensure newly added are observed)
+                    if(window.__mainObserver){
+                      blogContainer.querySelectorAll('.animate-on-scroll').forEach(el => window.__mainObserver.observe(el));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching blog posts:', error);
+                    blogContainer.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Could not load posts.</div>';
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Now | Aurelius University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa; 
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .page-header-bg {
+            background-image: linear-gradient(rgba(10, 20, 39, 0.85), rgba(10, 20, 39, 0.85)), url('https://images.unsplash.com/photo-1503676260728-1c64c1aef98a?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .header-scrolled {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-scrolled a, .header-scrolled button, .header-scrolled span {
+            color: #1a202c !important; /* text-gray-900 */
+        }
+        .header-scrolled .apply-btn {
+             background-color: #c09a59; /* Custom Gold */
+             color: white !important;
+        }
+        .header-scrolled .apply-btn:hover {
+            background-color: #b38e52;
+        }
+        .nav-link-underline {
+            position: relative;
+        }
+        .nav-link-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #c09a59;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link-underline:hover::after, .nav-link-underline.active::after {
+            width: 100%;
+        }
+
+        .section-title-underline {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #c09a59;
+        }
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: calc(100% - 40px);
+            width: 2px;
+            background-color: #e5e7eb; /* gray-200 */
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-screen-2xl mx-auto bg-white">
+        <!-- Header -->
+        <header id="main-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 transition-all duration-300">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center space-x-2 text-white">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span class="font-bold text-xl tracking-wider">AURELIUS</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-10">
+                        <a href="/" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Home</a>
+                        <a href="/about" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">About</a>
+                        <a href="/courses" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Courses</a>
+                        <a href="/notes" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Notes</a>
+                        <a href="/gallery" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Gallery</a>
+                        <a href="/blog" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Blog</a>
+                        <a href="/contact" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Contact</a>
+                        <a href="/login" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Login</a>
+                        <a href="/register" class="nav-link-underline text-white hover:text-yellow-300 transition-colors duration-300 font-medium tracking-wide">Register</a>
+                        
+                    </nav>
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/apply" class="apply-btn hidden sm:inline-block bg-[#c09a59] text-white font-bold py-2 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-md">Apply Now</a>
+                         <button class="md:hidden text-white" id="menu-button">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+             <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+                <a href="/" class="block text-white text-center py-4 hover:bg-gray-800">Home</a>
+                <a href="/about" class="block text-white text-center py-4 hover:bg-gray-800">About</a>
+                <a href="/courses" class="block text-white text-center py-4 hover:bg-gray-800">Courses</a>
+                <a href="/notes" class="block text-white text-center py-4 hover:bg-gray-800">Notes</a>
+                <a href="/gallery" class="block text-white text-center py-4 hover:bg-gray-800">Gallery</a>
+                <a href="/blog" class="block text-white text-center py-4 hover:bg-gray-800">Blog</a>
+                <a href="/contact" class="block text-white text-center py-4 hover:bg-gray-800">Contact</a>
+                <a href="/login" class="block text-white text-center py-4 hover:bg-gray-800">Login</a>
+                <a href="/register" class="block text-white text-center py-4 hover:bg-gray-800">Register</a>
+                <a href="/apply" class="block bg-[#c09a59] text-white text-center font-bold py-4 hover:bg-[#b38e52]">Apply Now</a>
+            </div>
+        </header>
+
+        <main>
+            <!-- Page Header -->
+            <section class="relative page-header-bg overflow-hidden">
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 pb-32 text-white text-center">
+                    <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight animate-on-scroll">Application Portal</h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-300 animate-on-scroll" style="transition-delay: 0.2s;">
+                        Your journey to excellence begins with a single step. Start your application today.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Application Process Section -->
+            <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 section-title-underline">How to Apply</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                        <!-- Step 1 -->
+                        <div class="relative flex flex-col items-center animate-on-scroll step-item">
+                            <div class="bg-[#c09a59] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold z-10">1</div>
+                            <h3 class="mt-6 text-xl font-bold text-gray-900">Online Application</h3>
+                            <p class="mt-2 text-gray-600">Complete and submit our streamlined online application form.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="relative flex flex-col items-center animate-on-scroll step-item" style="transition-delay: 0.2s;">
+                            <div class="bg-[#c09a59] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold z-10">2</div>
+                            <h3 class="mt-6 text-xl font-bold text-gray-900">Submit Documents</h3>
+                            <p class="mt-2 text-gray-600">Upload your transcripts, essays, and letters of recommendation.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="relative flex flex-col items-center animate-on-scroll step-item" style="transition-delay: 0.4s;">
+                            <div class="bg-[#c09a59] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold z-10">3</div>
+                            <h3 class="mt-6 text-xl font-bold text-gray-900">Application Review</h3>
+                            <p class="mt-2 text-gray-600">Our admissions committee will carefully review your profile.</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="relative flex flex-col items-center animate-on-scroll" style="transition-delay: 0.6s;">
+                            <div class="bg-[#c09a59] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold z-10">4</div>
+                            <h3 class="mt-6 text-xl font-bold text-gray-900">Receive Decision</h3>
+                            <p class="mt-2 text-gray-600">Admission decisions are released via the applicant portal.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Application Form -->
+            <section class="py-24 bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white p-8 sm:p-12 rounded-lg shadow-xl animate-on-scroll">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-8 section-title-underline">Start Your Application</h2>
+                        <form action="#" method="POST" class="space-y-6">
+                             <fieldset>
+                                <legend class="text-xl font-semibold text-gray-900 mb-4">Personal Information</legend>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="first-name" class="block text-sm font-medium text-gray-700">First Name</label>
+                                        <input type="text" name="first-name" id="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]">
+                                    </div>
+                                    <div>
+                                        <label for="last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                                        <input type="text" name="last-name" id="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]">
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                        <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]">
+                                    </div>
+                                     <div>
+                                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                        <input type="tel" name="phone" id="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]">
+                                    </div>
+                                </div>
+                            </fieldset>
+                            
+                            <fieldset>
+                                <legend class="text-xl font-semibold text-gray-900 pt-6 mb-4">Academic Information</legend>
+                                <div>
+                                    <label for="program" class="block text-sm font-medium text-gray-700">Program of Interest</label>
+                                    <select id="program" name="program" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]">
+                                        <option>Select a Program...</option>
+                                        <option>B.Sc. in Computer Science</option>
+                                        <option>B.A. in History</option>
+                                        <option>B.S. in Business Administration</option>
+                                        <option>B.A. in English Literature</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                            
+                             <fieldset>
+                                <legend class="text-xl font-semibold text-gray-900 pt-6 mb-4">Personal Essay</legend>
+                                <div>
+                                    <label for="essay" class="block text-sm font-medium text-gray-700">Please tell us why you are interested in Aurelius University (500 words max).</label>
+                                    <textarea id="essay" name="essay" rows="8" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:ring-[#c09a59] focus:border-[#c09a59]"></textarea>
+                                </div>
+                            </fieldset>
+
+                            <div class="pt-6">
+                                <button type="submit" class="w-full bg-[#c09a59] text-white font-bold py-4 px-6 rounded-md hover:bg-[#b38e52] transition-all duration-300 shadow-lg text-lg">
+                                    Submit Application
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white">
+             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <!-- About -->
+                    <div class="col-span-1 md:col-span-2">
+                         <h3 class="text-xl font-semibold tracking-wider">AURELIUS UNIVERSITY</h3>
+                         <p class="mt-4 text-gray-400">Illuminating minds and shaping the future since 1901.</p>
+                    </div>
+                     <!-- Links -->
+                    <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">EXPLORE</h4>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                            <li><a href="apply.html" class="text-gray-400 hover:text-white transition-colors">Admissions</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">News & Events</a></li>
+                            <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Social -->
+                     <div>
+                        <h4 class="font-semibold tracking-wider text-gray-300">CONNECT</h4>
+                        <div class="flex items-center space-x-4 mt-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-16 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm">&copy; 2025 Aurelius University. All Rights Reserved.</p>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm mt-4 md:mt-0">Privacy Policy</a>
+                </div>
+             </div>
+        </footer>
+    </div>
+
+    <!-- shared header/menu/animations -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
+        

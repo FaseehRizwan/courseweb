@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Manage Notes | Admin - Aurelius</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+  .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:all .15s;}
+  .sidebar-link:hover{background:#111827;color:#fff;}
+  /* Mobile sidebar overlay for admin pages (shared) */
+  #admin-mobile-menu { display: none; position: fixed; inset: 0; z-index: 70; }
+  #admin-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+  #admin-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:360px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+  @media (max-width: 768px) { #admin-mobile-menu.show { display:block; } }
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/admin/dashboard" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/admin/students" class="sidebar-link"><i data-feather="users" class="w-4"></i><span>Students</span></a>
+      <a href="/admin/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/admin/notes" class="sidebar-link bg-gray-800 text-white"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/admin/blogs" class="sidebar-link"><i data-feather="edit" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4">
+      <button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md transition flex items-center justify-center space-x-2"><i data-feather="log-out" class="w-4"></i><span>Logout</span></button>
+    </form>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
+      <div class="flex items-center gap-3">
+        <button id="admin-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-2xl font-bold">Manage Notes</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900">View site</a>
+        <form method="post" action="/logout"><button class="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">Logout</button></form>
+      </div>
+    </header>
+    <!-- Mobile admin menu (shared structure) -->
+    <div id="admin-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="admin-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="admin-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/admin/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/admin/students" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Students</a></li>
+          <li><a href="/admin/courses" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Courses</a></li>
+          <li><a href="/admin/notes" class="block px-3 py-2 rounded bg-gray-800 text-white">Notes</a></li>
+          <li><a href="/admin/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+    <main class="flex-1 p-6 space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-5 rounded shadow">
+          <h2 class="font-semibold mb-3">Add Category</h2>
+          <form id="cat-form" class="space-y-3 text-sm">
+            <input name="name" required placeholder="Category name" class="w-full border rounded px-3 py-2">
+            <select name="parent_id" class="w-full border rounded px-3 py-2">
+              <option value="">(No parent)</option>
+            </select>
+            <button class="w-full bg-gray-900 text-white py-2 rounded">Create</button>
+          </form>
+        </div>
+        <div class="bg-white p-5 rounded shadow md:col-span-2">
+          <h2 class="font-semibold mb-3">Categories</h2>
+          <ul id="cat-list" class="text-sm space-y-2"></ul>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">Upload Note</h2>
+        <form id="note-form" class="grid md:grid-cols-2 gap-4 text-sm" enctype="multipart/form-data">
+          <input name="title" required placeholder="Title" class="border rounded px-3 py-2 col-span-2 md:col-span-1">
+          <select name="category_id" class="border rounded px-3 py-2 col-span-2 md:col-span-1">
+            <option value="">(No category)</option>
+          </select>
+          <textarea name="description" placeholder="Description" class="border rounded px-3 py-2 col-span-2"></textarea>
+          <div class="col-span-2 flex items-center gap-4">
+            <label class="flex items-center gap-2 text-sm"><input type="radio" name="is_public" value="1" checked> Public</label>
+            <label class="flex items-center gap-2 text-sm"><input type="radio" name="is_public" value="0"> Authorized</label>
+          </div>
+          <input type="file" name="file" required class="border rounded px-3 py-2 col-span-2">
+          <div class="col-span-2">
+            <button class="bg-[#c09a59] text-white px-6 py-2 rounded">Upload</button>
+          </div>
+        </form>
+      </div>
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="font-semibold mb-4">All Notes</h2>
+        <div class="flex gap-3 mb-4 text-sm">
+          <button onclick="loadNotes()" class="px-3 py-1 bg-gray-900 text-white rounded">All</button>
+          <button onclick="loadNotes(1)" class="px-3 py-1 bg-gray-200 rounded">Public</button>
+          <button onclick="loadNotes(0)" class="px-3 py-1 bg-gray-200 rounded">Authorized</button>
+        </div>
+        <div id="notes-list" class="text-sm space-y-3"></div>
+      </div>
+    </main>
+  </div>
+  <script>
+    function opt(label,value){ return `<option value="${value}">${label}</option>`; }
+    async function loadCategories(){
+      const selParent = document.querySelector('#cat-form select[name=parent_id]');
+      const selNote = document.querySelector('#note-form select[name=category_id]');
+      const res = await fetch('/api/admin/notes/categories');
+      if(!res.ok) return;
+      const cats = await res.json();
+      selParent.innerHTML = '<option value="">(No parent)</option>' + cats.map(c=>opt(c.name,c.id)).join('');
+      selNote.innerHTML = '<option value="">(No category)</option>' + cats.map(c=>opt(c.name,c.id)).join('');
+      const list = document.getElementById('cat-list');
+      list.innerHTML = cats.length? cats.map(c=>`<li class="flex justify-between border px-3 py-2 rounded">
+        <span>${c.name}${c.parent_id?'<span class="text-gray-400 text-xs"> (child)</span>':''}</span></li>`).join('') : '<li class="text-gray-400">No categories</li>';
+    }
+    document.getElementById('cat-form').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      const r = await fetch('/api/admin/notes/categories',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(r.ok){ e.target.reset(); loadCategories(); }
+    });
+
+    async function loadNotes(filter){
+      const list = document.getElementById('notes-list');
+      list.innerHTML = 'Loading...';
+      const res = await fetch('/api/admin/notes'+(filter===0||filter===1?`?is_public=${filter}`:''));
+      if(!res.ok){ list.innerHTML='Failed'; return;}
+      const notes = await res.json();
+      list.innerHTML = notes.length? notes.map(n=>`
+        <div class="border rounded p-3 flex justify-between">
+          <div>
+            <div class="font-semibold">${n.title}</div>
+            <div class="text-xs text-gray-500">${n.is_public? 'Public':'Authorized'} ${n.category_name? ' • '+n.category_name:''}</div>
+            <a href="${n.file_url}" target="_blank" class="text-blue-600 underline text-xs">Download</a>
+          </div>
+          <button class="text-xs bg-red-600 text-white px-2 py-1 rounded" onclick="delNote('${n.id}')">Delete</button>
+        </div>`).join('') : '<div class="text-gray-400">No notes</div>';
+    }
+    async function delNote(id){
+      if(!confirm('Delete note?')) return;
+      const r = await fetch('/api/admin/notes/'+id,{method:'DELETE'});
+      if(r.ok) loadNotes();
+    }
+    document.getElementById('note-form').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const r = await fetch('/api/admin/notes',{method:'POST',body:fd});
+      if(r.ok){ e.target.reset(); loadNotes(); } else alert('Upload failed');
+    });
+
+    (function(){
+      const btn = document.getElementById('admin-menu-button');
+      const menu = document.getElementById('admin-mobile-menu');
+      const backdrop = document.getElementById('admin-mobile-backdrop');
+      const closeBtn = document.getElementById('admin-mobile-close');
+      function show(){ menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu) btn.addEventListener('click', e=>{ e.preventDefault(); show(); });
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      try{ const panel = menu.querySelector('.panel'); if(panel) panel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>setTimeout(hide,50))); }catch(e){}
+      document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') hide(); });
+    })();
+
+    loadCategories(); loadNotes();
+    feather.replace();
+  </script>
+</body>
+</html>

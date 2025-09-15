@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Notes | Student</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<style>
+  body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+  .sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.5rem 1rem;border-radius:.375rem;font-size:.95rem;font-weight:500;color:#d1d5db;transition:all .15s;}
+  .sidebar-link:hover{background:#111827;color:#fff;}
+  /* student mobile sidebar overlay (shared) */
+  #student-mobile-menu { display:none; position:fixed; inset:0; z-index:60; }
+  #student-mobile-menu .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+  #student-mobile-menu .panel { position:absolute; left:0; top:0; bottom:0; width:78%; max-width:320px; background:#0f172a; color:#d1d5db; overflow:auto; padding:18px; }
+  @media (max-width: 768px) { #student-mobile-menu.show { display:block; } }
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <aside class="w-64 bg-gray-900 text-gray-200 hidden md:flex flex-col">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800">
+      <a href="/" class="flex items-center space-x-2 text-white font-bold tracking-wider"><i data-feather="shield"></i><span>AURELIUS</span></a>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+      <a href="/student/dashboard" class="flex items-center space-x-3 px-4 py-2 rounded-md bg-gray-800 text-white text-sm font-semibold"><i data-feather="layout" class="w-4"></i><span>Dashboard</span></a>
+      <a href="/student/profile" class="sidebar-link"><i data-feather="user" class="w-4"></i><span>Profile</span></a>
+      <a href="/student/courses" class="sidebar-link"><i data-feather="book-open" class="w-4"></i><span>Courses</span></a>
+      <a href="/student/notes" class="sidebar-link bg-gray-800 text-white"><i data-feather="file-text" class="w-4"></i><span>Notes</span></a>
+      <a href="/student/blogs" class="sidebar-link"><i data-feather="file-text" class="w-4"></i><span>Blogs</span></a>
+    </nav>
+    <form method="post" action="/logout" class="p-4"><button class="w-full bg-[#c09a59] hover:bg-[#b38e52] text-white font-semibold py-2 rounded-md">Logout</button></form>
+  </aside>
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white shadow flex items-center px-6 justify-between">
+      <div class="flex items-center gap-3">
+        <button id="student-menu-button" class="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100" title="Open menu"><i data-feather="menu" class="w-5 h-5"></i></button>
+        <h1 class="text-xl font-bold">Notes</h1>
+      </div>
+      <a href="/student/dashboard" class="text-sm text-gray-600 hover:text-gray-900">Back</a>
+    </header>
+
+    <!-- Student mobile menu -->
+    <div id="student-mobile-menu" aria-hidden="true">
+      <div class="backdrop" id="student-mobile-backdrop"></div>
+      <nav class="panel">
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="font-bold text-white">AURELIUS</span>
+          </div>
+          <button id="student-mobile-close" class="text-gray-300 hover:text-white"><i data-feather="x" class="w-5 h-5"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/student/dashboard" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Dashboard</a></li>
+          <li><a href="/student/profile" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Profile</a></li>
+          <li><a href="/student/courses" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Courses</a></li>
+          <li><a href="/student/notes" class="block px-3 py-2 rounded bg-gray-800 text-white">Notes</a></li>
+          <li><a href="/student/blogs" class="block px-3 py-2 rounded hover:bg-gray-800 text-gray-100">Blogs</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="p-6 space-y-8">
+      <div class="flex gap-3 text-sm">
+        <button onclick="filterNotes('all')" class="px-3 py-1 bg-gray-900 text-white rounded">All</button>
+        <button onclick="filterNotes('public')" class="px-3 py-1 bg-gray-200 rounded">Public</button>
+        <button onclick="filterNotes('authorized')" class="px-3 py-1 bg-gray-200 rounded">Authorized</button>
+      </div>
+      <div id="notes-list" class="grid md:grid-cols-3 gap-4"></div>
+    </main>
+  </div>
+  <script>
+    (function(){
+      const btn = document.getElementById('student-menu-button');
+      const menu = document.getElementById('student-mobile-menu');
+      const backdrop = document.getElementById('student-mobile-backdrop');
+      const closeBtn = document.getElementById('student-mobile-close');
+      function show(){ menu.classList.add('show'); if(window.feather) feather.replace(); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('show'); document.body.style.overflow=''; }
+      if(btn && menu) btn.addEventListener('click', e=>{ e.preventDefault(); show(); });
+      if(backdrop) backdrop.addEventListener('click', hide);
+      if(closeBtn) closeBtn.addEventListener('click', hide);
+      try{ const panel = menu.querySelector('.panel'); if(panel) panel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>setTimeout(hide,50))); }catch(e){}
+      document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') hide(); });
+    })();
+    let allNotes=[];
+    async function load(){
+      const r = await fetch('/api/student/notes');
+      if(!r.ok) return;
+      allNotes = await r.json();
+      render(allNotes);
+    }
+    function filterNotes(type){
+      if(type==='public') return render(allNotes.filter(n=>n.is_public));
+      if(type==='authorized') return render(allNotes.filter(n=>!n.is_public));
+      render(allNotes);
+    }
+    function render(list){
+      const wrap=document.getElementById('notes-list');
+      wrap.innerHTML = list.length? list.map(n=>`
+        <div class="bg-white rounded shadow p-4 text-sm flex flex-col">
+          <div class="font-semibold">${n.title}</div>
+          <div class="text-xs text-gray-500 mb-2">${n.is_public?'Public':'Authorized'}${n.category_name?' • '+n.category_name:''}</div>
+          <p class="text-xs flex-grow">${n.description||''}</p>
+          <a href="${n.file_url}" target="_blank" class="mt-3 text-blue-600 underline text-xs">Download</a>
+        </div>`).join('') : '<div class="text-gray-400">No notes</div>';
+    }
+    load();
+    if(window.feather && typeof feather.replace === 'function') feather.replace();
+  </script>
+</body>
+</html>
